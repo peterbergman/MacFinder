@@ -4,7 +4,9 @@ public class App
 {
     public static void main( String[] args )
     {
-		NetworkInfo ni = new NetworkInfo();
-		System.out.println(ni.getNetworks());
+		Installer installer = new Installer();
+		installer.install();
+		NetworkInfo networkInfo = new NetworkInfo();
+		System.out.println(networkInfo.getNetworks());
     }
 }
