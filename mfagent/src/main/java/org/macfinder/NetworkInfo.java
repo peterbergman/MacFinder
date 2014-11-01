@@ -15,20 +15,19 @@ import java.util.regex.Pattern;
 public class NetworkInfo {
 
 	/**
-	 * Method to fetch a list of all nearby access point MAC addresses.
+	 * Method to fetch a list of all nearby access points.
 	 *
 	 * Internally calls the getNetworkInfo-method to perform the network scan.
 	 *
-	 * @return List	a list of strings where each entry represent
-	 * 				the MAC address of a nearby access point.
+	 * @return List	a list of access points
 	 */
-	public List<String> getNetworks() {
-		List<String> networks = new ArrayList<String>();
+	public List<AccessPoint> getNetworks() {
+		List<AccessPoint> networks = new ArrayList<AccessPoint>();
 		String networkInfo = getNetworkInfo();
 		Pattern pattern = Pattern.compile("([a-fA-F0-9]{2}[:-]){5}[a-fA-F0-9]");
 		Matcher matcher = pattern.matcher(networkInfo);
 		while (matcher.find()) {
-			networks.add(matcher.group());
+			networks.add(new AccessPoint(matcher.group()));
 		}
 		return networks;
 	}

@@ -11,18 +11,22 @@ public class AgentRequest {
 
 	private String userName;
 	private String password;
-	private List<String> networks;
+	private List<AccessPoint> wifiAccessPoints;
 
 	/**
 	 * Constructs a new AgentRequest-object.
 	 *
 	 * @param userName	the username to authenticate with the MacFinder server
 	 * @param password	the password to authenticate with the MacFinder server
-	 * @param networks	a list of networks detected
+	 * @param wifiAccessPoints	a list of networks detected
 	 */
-	public AgentRequest(String userName, String password, List<String> networks) {
+	public AgentRequest(String userName, String password, List<AccessPoint> wifiAccessPoints) {
 		this.userName = userName;
 		this.password = password;
-		this.networks = networks;
+		this.wifiAccessPoints = wifiAccessPoints;
+	}
+
+	public List<AccessPoint> getWifiAccessPoints() {
+		return wifiAccessPoints;
 	}
 }

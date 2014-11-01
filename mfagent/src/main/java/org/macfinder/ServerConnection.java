@@ -38,6 +38,7 @@ public class ServerConnection {
 			outputStream.write(jsonData.getBytes());
 			outputStream.flush();
 			outputStream.close();
+			connection.disconnect();
 		} catch (IOException ioe) {
 
 		}
