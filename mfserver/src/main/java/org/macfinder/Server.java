@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -12,14 +15,20 @@ import java.util.logging.Logger;
  */
 public class Server {
 
-	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
 	static {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
 	private final static int DEFAULT_PORT = 80;
-	private static final int QUEUE_LENGTH = 50;
+	private final static int QUEUE_LENGTH = 50;
+	private final static int THREAD_COUNT = 4;
 	private ServerSocket serverSocket;
+	private ExecutorService pool;
+
+	public Server() {
+		pool = Executors.newFixedThreadPool(THREAD_COUNT);
+	}
 
 	public void open() {
 		LOGGER.info("Trying to start server...");
@@ -29,16 +38,22 @@ public class Server {
 			LOGGER.info("Server started!");
 			while (true) {
 				Socket socket = serverSocket.accept();
-				ClientConnection client = new ClientConnection(socket);
+				Runnable task = new ClientConnection(socket);
+				pool.submit(task);
 			}
 		} catch (IOException e) {
 			LOGGER.severe("Could not start server...." + e);
-		} finally {
-			if (serverSocket != null) {
-				try {
-					serverSocket.close();
-				} catch (IOException ioe) {}
-			}
+		}
+	}
+
+	public void close() {
+		if (serverSocket != null) {
+			try {
+				serverSocket.close();
+			} catch (IOException ioe) {}
+		}
+		if (pool != null) {
+			pool.shutdown();
 		}
 	}
 
