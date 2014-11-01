@@ -19,7 +19,8 @@ public class NetworkInfo {
 	 *
 	 * Internally calls the getNetworkInfo-method to perform the network scan.
 	 *
-	 * @return List	a list of strings where each entry represent the MAC address of a nearby access point.
+	 * @return List	a list of strings where each entry represent
+	 * 				the MAC address of a nearby access point.
 	 */
 	public List<String> getNetworks() {
 		List<String> networks = new ArrayList<String>();
