@@ -6,12 +6,18 @@ package org.macfinder;
 public class AccessPoint {
 
 	private String macAddress;
+	private int signalStrength;
 
-	public AccessPoint(String macAddress) {
+	public AccessPoint(String macAddress, int signalStrength) {
 		this.macAddress = macAddress;
+		this.signalStrength = signalStrength;
 	}
 
 	public String getMacAddress() {
 		return macAddress;
+	}
+
+	public int getSignalStrength() {
+		return signalStrength;
 	}
 }

@@ -19,7 +19,6 @@ public class ConnectionTask implements Runnable {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
-
 	private Socket socket;
 
 	/**
