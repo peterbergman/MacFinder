@@ -12,13 +12,12 @@ import java.util.logging.Logger;
  */
 public class ClientConnection implements Runnable {
 
-	private final static Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
 	static {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
 
-	private Thread internalThread;
 	private Socket socket;
 
 	/**
@@ -28,8 +27,6 @@ public class ClientConnection implements Runnable {
 	 */
 	public ClientConnection(Socket socket) {
 		this.socket = socket;
-		internalThread = new Thread(this);
-		internalThread.start();
 	}
 
 	/**
@@ -40,23 +37,25 @@ public class ClientConnection implements Runnable {
 	 * correct service.
 	 */
 	public void run() {
-		while (!internalThread.isInterrupted()) {
-			LOGGER.info("Connection active!");
-			String request = parseRequest();
-			if (validRequest(request)) {
-				String[] requestArray = request.split("\n\n");
-				String headers = requestArray[0];
-				String data = requestArray[1];
-				if (requestType(headers).equals(RequestType.AGENT)) {
-					// TODO: handle agent stuff
-				} else if (requestType(headers).equals(RequestType.CLIENT)) {
-					// TODO: handle client stuff
-				}
+		LOGGER.info("Connection active!");
+		String request = parseRequest();
+		if (validRequest(request)) {
+			String[] requestArray = request.split("\n\n");
+			String headers = requestArray[0];
+			String data = requestArray[1];
+			if (requestType(headers).equals(RequestType.AGENT)) {
+				LOGGER.info("Agent request found! \n" + data);
+			} else if (requestType(headers).equals(RequestType.CLIENT)) {
+				// TODO: handle client stuff
 			}
-			internalThread.interrupt();
 		}
 	}
 
+	/**
+	 * Helper method to parse the HTTP-request.
+	 *
+	 * @return	a string containing the data from the request, both headers and body
+	 */
 	private String parseRequest() {
 		StringBuilder request = new StringBuilder();
 		try {
@@ -71,10 +70,24 @@ public class ClientConnection implements Runnable {
 		return request.toString();
 	}
 
+	/**
+	 * Method to validate the HTTP-request.
+	 *
+	 * @param request	a string with the data from the request, both headers and body
+	 * @return			true if the request target matches one of the known endpoints,
+	 * 					and if the request contains a valid separation between headers and body
+	 */
 	private boolean validRequest(String request) {
-		return (request.contains("/agent") || request.contains("/client")) && request.contains("/n/n");
+		return (request.contains("/agent") || request.contains("/client")) && request.contains("\n\n");
 	}
 
+	/**
+	 * Method to compute the request type.
+	 *
+	 * @param headers		the headers of the HTTP-request
+	 * @return RequestType	RequestType.AGENT if the endpoint is /agent,
+	 * 						otherwise RequestType.CLIENT
+	 */
 	private RequestType requestType(String headers) {
 		return (headers.contains("/agent") ? RequestType.AGENT : RequestType.CLIENT);
 	}

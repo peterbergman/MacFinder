@@ -39,7 +39,7 @@ public class Server {
 			while (true) {
 				Socket socket = serverSocket.accept();
 				Runnable task = new ClientConnection(socket);
-				pool.submit(task);
+				pool.execute(task);
 			}
 		} catch (IOException e) {
 			LOGGER.severe("Could not start server...." + e);
