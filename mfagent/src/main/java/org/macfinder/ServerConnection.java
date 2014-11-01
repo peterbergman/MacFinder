@@ -25,24 +25,22 @@ public class ServerConnection {
 	 */
 	public void sendData(AgentRequest data) throws IOException{
 		String jsonData = new Gson().toJson(data);
-		URL url = new URL(SERVER_ADDRESS);
+		try {
+			URL url = new URL(SERVER_ADDRESS);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
+			connection.setFixedLengthStreamingMode(jsonData.getBytes().length);
+			connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+			connection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+			connection.connect();
+			OutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
+			outputStream.write(jsonData.getBytes());
+			outputStream.flush();
+			outputStream.close();
+		} catch (IOException ioe) {
 
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setDoOutput(true);
-		conn.setFixedLengthStreamingMode(jsonData.getBytes().length);
-
-		conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-		conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
-
-		//open
-		conn.connect();
-
-		//setup send
-		OutputStream os = new BufferedOutputStream(conn.getOutputStream());
-		os.write(jsonData.getBytes());
-		//clean up
-		os.flush();
+		}
 	}
 
 }

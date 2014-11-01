@@ -1,6 +1,7 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
+import org.macfinder.service.LocationService;
 
 import java.io.*;
 import java.net.Socket;
@@ -10,9 +11,9 @@ import java.util.logging.Logger;
 /**
  * Class to represent connections from agents.
  */
-public class ClientConnection implements Runnable {
+public class ConnectionTask implements Runnable {
 
-	private final static Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(ConnectionTask.class.getName());
 	static {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
@@ -25,7 +26,7 @@ public class ClientConnection implements Runnable {
 	 *
 	 * @param socket	the socket with the connection to the client.
 	 */
-	public ClientConnection(Socket socket) {
+	public ConnectionTask(Socket socket) {
 		this.socket = socket;
 	}
 
@@ -44,7 +45,7 @@ public class ClientConnection implements Runnable {
 			String headers = requestArray[0];
 			String data = requestArray[1];
 			if (requestType(headers).equals(RequestType.AGENT)) {
-				LOGGER.info("Agent request found! \n" + data);
+				handleAgentRequest(data);
 			} else if (requestType(headers).equals(RequestType.CLIENT)) {
 				// TODO: handle client stuff
 			}
@@ -90,5 +91,12 @@ public class ClientConnection implements Runnable {
 	 */
 	private RequestType requestType(String headers) {
 		return (headers.contains("/agent") ? RequestType.AGENT : RequestType.CLIENT);
+	}
+
+	private void handleAgentRequest(String data) {
+		LOGGER.info("Handling agent request...");
+		AgentRequest agentRequest = new Gson().fromJson(data, AgentRequest.class);
+		LocationService service = new LocationService();
+		service.lookupLocation(agentRequest.getNetworks());
 	}
 }

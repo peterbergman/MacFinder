@@ -37,7 +37,7 @@ public class Server {
 			LOGGER.info("Server started!");
 			while (true) {
 				Socket socket = serverSocket.accept();
-				Runnable task = new ClientConnection(socket);
+				Runnable task = new ConnectionTask(socket);
 				pool.execute(task);
 			}
 		} catch (IOException e) {

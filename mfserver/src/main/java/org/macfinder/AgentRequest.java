@@ -25,4 +25,16 @@ public class AgentRequest {
 		this.password = password;
 		this.networks = networks;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public List<String> getNetworks() {
+		return networks;
+	}
 }
