@@ -1,7 +1,8 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
-import org.macfinder.service.LocationService;
+import org.macfinder.service.location.LocationService;
+import org.macfinder.service.location.LocationServicerequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -96,7 +97,7 @@ public class ConnectionTask implements Runnable {
 	private void handleAgentRequest(String data) {
 		LOGGER.info("Handling agent request...");
 		AgentRequest agentRequest = new Gson().fromJson(data, AgentRequest.class);
-		LocationService service = new LocationService();
-		service.lookupLocation(agentRequest.getNetworks());
+		LocationService service = new LocationService(new LocationServicerequest(agentRequest.getWifiAccessPoints()));
+		service.lookupLocation();
 	}
 }
