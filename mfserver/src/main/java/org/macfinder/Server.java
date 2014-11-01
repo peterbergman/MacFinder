@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.ConsoleHandler;
@@ -20,7 +19,7 @@ public class Server {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
-	private final static int DEFAULT_PORT = 80;
+	private final static int PORT = 80;
 	private final static int QUEUE_LENGTH = 50;
 	private final static int THREAD_COUNT = 4;
 	private ServerSocket serverSocket;
@@ -34,7 +33,7 @@ public class Server {
 		LOGGER.info("Trying to start server...");
 		try {
 			InetAddress localHost = InetAddress.getLocalHost();
-			serverSocket = new ServerSocket(DEFAULT_PORT, QUEUE_LENGTH, localHost);
+			serverSocket = new ServerSocket(PORT, QUEUE_LENGTH, localHost);
 			LOGGER.info("Server started!");
 			while (true) {
 				Socket socket = serverSocket.accept();

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  */
 public class ClientConnection implements Runnable {
 
-	private static final Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
 	static {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());

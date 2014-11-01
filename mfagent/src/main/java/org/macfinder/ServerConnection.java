@@ -15,17 +15,6 @@ public class ServerConnection {
 	private static final String SERVER_ADDRESS = "http://192.168.1.74/agent";
 
 	/**
-	 * Constructs a new ServerConnection object.
-	 *
-	 * Internally uses a URLConnection to open the actual connection to the server.
-	 *
-	 * @throws IOException	if the internal URLConnection fails for any reason
-	 */
-	public ServerConnection() {
-
-	}
-
-	/**
 	 * Sends data to the MacFinder server.
 	 *
 	 * Internally uses a HttpURLConnection and sends JSON-data with a POST-request.
