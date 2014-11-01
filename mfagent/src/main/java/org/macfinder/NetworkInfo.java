@@ -22,14 +22,15 @@ public class NetworkInfo {
 	 * @return List	a list of access points
 	 */
 	public List<AccessPoint> getNetworks() {
-		List<AccessPoint> networks = new ArrayList<AccessPoint>();
+		List<AccessPoint> accessPoints = new ArrayList<AccessPoint>();
 		String networkInfo = getNetworkInfo();
-		Pattern pattern = Pattern.compile("([a-fA-F0-9]{2}[:-]){5}[a-fA-F0-9]");
+		Pattern pattern = Pattern.compile("([a-fA-F0-9]{2}[:-]){5}[a-fA-F0-9]{2}[ ][-][1-9]{1,2}");
 		Matcher matcher = pattern.matcher(networkInfo);
 		while (matcher.find()) {
-			networks.add(new AccessPoint(matcher.group()));
+			String[] tuple = matcher.group().split(" ");
+			accessPoints.add(new AccessPoint(tuple[0], Integer.parseInt(tuple[1])));
 		}
-		return networks;
+		return accessPoints;
 	}
 
 	/**
