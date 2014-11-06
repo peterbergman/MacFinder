@@ -9,24 +9,32 @@ import java.util.List;
  */
 public class AgentRequest {
 
-	private String userName;
+	private String username;
 	private String password;
 	private List<AccessPoint> wifiAccessPoints;
 
 	/**
 	 * Constructs a new AgentRequest-object.
 	 *
-	 * @param userName	the username to authenticate with the MacFinder server
+	 * @param username	the username to authenticate with the MacFinder server
 	 * @param password	the password to authenticate with the MacFinder server
 	 * @param wifiAccessPoints	a list of networks detected
 	 */
-	public AgentRequest(String userName, String password, List<AccessPoint> wifiAccessPoints) {
-		this.userName = userName;
+	public AgentRequest(String username, String password, List<AccessPoint> wifiAccessPoints) {
+		this.username = username;
 		this.password = password;
 		this.wifiAccessPoints = wifiAccessPoints;
 	}
 
 	public List<AccessPoint> getWifiAccessPoints() {
 		return wifiAccessPoints;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 }

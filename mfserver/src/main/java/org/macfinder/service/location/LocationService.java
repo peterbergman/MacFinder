@@ -34,11 +34,13 @@ public class LocationService {
 	 * Internally calls the Google Location API with
 	 * a list of nearby networks to resolve the location.
 	 *
+	 * @return 				a location object if the lookup was successful, null if not
 	 * @throws IOException	if the communication with the API failed
 	 */
-	public void lookupLocation() {
+	public GeoLookup lookupLocation() {
 		LOGGER.info("Loooking up geo location...");
 		String jsonData = new Gson().toJson(request);
+		GeoLookup geoLookup = null;
 		try {
 			URL url = new URL(SERVER_ADDRESS);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -59,12 +61,13 @@ public class LocationService {
 			while ((line = reader.readLine()) != null) {
 				output.append(line);
 			}
-			LOGGER.info(output.toString());
+			geoLookup = new Gson().fromJson(output.toString(), GeoLookup.class);
 			reader.close();
 			connection.disconnect();
 		} catch (IOException ioe) {
-
+			LOGGER.severe(ioe.toString());
 		}
+		return geoLookup;
 	}
 
 }
