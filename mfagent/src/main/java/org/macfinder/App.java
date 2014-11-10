@@ -1,6 +1,8 @@
 package org.macfinder;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.List;
 
 public class App {
 
@@ -19,7 +21,9 @@ public class App {
 			if (args[0].equals("execute")) {
 				NetworkInfo networkInfo = new NetworkInfo();
 				try {
-					app.connection.sendData(new AgentRequest("user1", "password1", networkInfo.getNetworks()));
+					List<AccessPoint> wifiAccessPoints = networkInfo.getNetworks();
+					Machine machine = new Machine(InetAddress.getLocalHost().getHostName());
+					app.connection.sendData(new AgentRequest("user1", "password1", wifiAccessPoints, machine));
 				} catch (IOException ioe) {
 					System.err.println(ioe);
 				}
