@@ -90,7 +90,7 @@ public class DBService {
 	}
 
 	/**
-	 * Internal helper method to close the database connection.
+	 * Internal helper method to stop the database connection.
 	 */
 	private void close() {
 		LOGGER.info("Closing DB connection...");
