@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.model;
 
 /**
  * Class to represent a WiFi access point.

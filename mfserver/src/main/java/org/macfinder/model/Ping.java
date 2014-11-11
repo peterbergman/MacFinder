@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.model;
 
 import org.macfinder.service.location.GeoLookup;
 

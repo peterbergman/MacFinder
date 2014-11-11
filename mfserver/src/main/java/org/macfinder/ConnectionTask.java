@@ -1,6 +1,8 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
+import org.macfinder.model.RequestType;
+import org.macfinder.model.User;
 import org.macfinder.service.database.DBService;
 
 import java.io.*;

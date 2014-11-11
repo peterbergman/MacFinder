@@ -28,7 +28,7 @@ public class Server {
 	public Server() {
 		pool = Executors.newFixedThreadPool(THREAD_COUNT);
 	}
-
+	
 	public void open() {
 		LOGGER.info("Trying to start server...");
 		try {

@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.model;
 
 /**
  * Enum to represent different request types.

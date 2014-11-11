@@ -1,6 +1,6 @@
 package org.macfinder.service.location;
 
-import org.macfinder.AccessPoint;
+import org.macfinder.model.AccessPoint;
 
 import java.util.List;
 

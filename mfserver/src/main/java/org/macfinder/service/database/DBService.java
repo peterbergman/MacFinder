@@ -3,7 +3,7 @@ package org.macfinder.service.database;
 import com.google.gson.Gson;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
-import org.macfinder.User;
+import org.macfinder.model.User;
 import java.net.UnknownHostException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
