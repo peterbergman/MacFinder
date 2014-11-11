@@ -28,6 +28,9 @@ public class DBService {
 	private DBCollection collection;
 	private Gson gson;
 
+	/**
+	 * Constructs a new DBService object.
+	 */
 	public DBService() {
 		try {
 			LOGGER.info("Connecting to DB...");
@@ -41,27 +44,54 @@ public class DBService {
 		}
 	}
 
-	public void put(User user) {
+	/**
+	 * Updates a user in the database.
+	 *
+	 * First tries to retrieve the existing user data from the database.
+	 * If this fails, then no update is made. If this is successful, then
+	 * the machines from the updatedUserData is added to the list of machines
+	 * from the existing user. This involves both merging of existing machines
+	 * and adding of new machines.
+	 * Then the existing (and now updated) user is placed back in the database.
+	 * <p></p>
+	 * Assumes that the updatedUserData only contains one single machine to add or update
+	 * to the existing user.
+	 *
+	 * @param updateUserData	the updated user data sent from the agent,
+	 *                          must be an existing user
+	 */
+	public void update(User updateUserData) {
 		LOGGER.info("Inserting new location...");
-		User existingUser = get(user);
+		User existingUser = get(updateUserData);
 		if (existingUser != null) {
-			existingUser.addMachine(user.getLastMachine());
+			existingUser.addMachine(updateUserData.getMachines().get(0));
 			BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
-			BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
+			BasicDBObject query = new BasicDBObject("username", updateUserData.getUsername()).append("password", updateUserData.getPassword());
 			collection.update(query, document);
-			LOGGER.info("Updated record for user: " + user.getUsername());
+			LOGGER.info("Updated record for updateUserData: " + updateUserData.getUsername());
 		} else {
-			LOGGER.warning("Authentication failed for user: " + user.getUsername());
+			LOGGER.warning("Authentication failed for updateUserData: " + updateUserData.getUsername());
 		}
 		close();
 	}
 
+	/**
+	 * Method to retrieve an exsting user from the databse.
+	 *
+	 * @param user	a User object to form the query,
+	 *              must consist of at least a username
+	 * @return		the User object found in the database that matches the
+	 * 				User object in the query. Null if not found.
+	 */
 	public User get(User user) {
 		BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
 		DBObject foundUser = collection.findOne(query);
 		return gson.fromJson(gson.toJson(foundUser), User.class);
 	}
 
+	/**
+	 * Internal helper method to close the databse connection.
+	 */
 	private void close() {
 		LOGGER.info("Closing DB connection...");
 		if (mongoClient != null) {

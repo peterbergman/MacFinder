@@ -2,8 +2,6 @@ package org.macfinder;
 
 import com.google.gson.Gson;
 import org.macfinder.service.location.DBService;
-import org.macfinder.service.location.LocationService;
-import org.macfinder.service.location.LocationServicerequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,7 +9,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 /**
- * Class to represent connections from agents.
+ * Class to represent a task to handle a request.
  */
 public class ConnectionTask implements Runnable {
 
@@ -84,7 +82,7 @@ public class ConnectionTask implements Runnable {
 	}
 
 	/**
-	 * Method to compute the request type.
+	 * Helper method to compute the request type.
 	 *
 	 * @param headers		the headers of the HTTP-request
 	 * @return RequestType	RequestType.AGENT if the endpoint is /agent,
@@ -94,10 +92,17 @@ public class ConnectionTask implements Runnable {
 		return (headers.contains("/agent") ? RequestType.AGENT : RequestType.CLIENT);
 	}
 
+	/**
+	 * Helper method to handle requests sent from an agent.
+	 *
+	 * @param data	the data sent from the agent, assumes
+	 *              that this is a JSON-string representing
+	 *              a User object.
+	 */
 	private void handleAgentRequest(String data) {
 		LOGGER.info("Handling agent request...");
 		User user = new Gson().fromJson(data, User.class);
 		DBService dbService = new DBService();
-		dbService.put(user);
+		dbService.update(user);
 	}
 }

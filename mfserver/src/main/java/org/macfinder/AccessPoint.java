@@ -21,13 +21,36 @@ public class AccessPoint {
 		return signalStrength;
 	}
 
+	/**
+	 * Compares this AccessPoint to the specified object.
+	 * <p></p>
+	 * The result is true if and only if the argument is not null
+	 * and is an AccessPoint object with the same mac address as this AccessPoint.
+	 *
+	 * @param other	the object to compare this AccessPoint against
+	 * @return		true if the given object represents an AccessPoint with a mac address
+	 * 				that equals this AccessPoint's mac address, false otherwise
+	 */
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof AccessPoint) {
+		if (other != null && other instanceof AccessPoint) {
 			AccessPoint otherAccessPoint = (AccessPoint) other;
 			return macAddress.equalsIgnoreCase(otherAccessPoint.getMacAddress());
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns the hash code of the AccessPoint.
+	 * <p></p>
+	 * The hash code is calculated by calling hashCode on the mac address
+	 * of the AccessPoint.
+	 *
+	 * @return a hash code value for this object
+	 */
+	@Override
+	public int hashCode() {
+		return macAddress.hashCode();
 	}
 }
