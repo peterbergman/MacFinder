@@ -31,7 +31,7 @@ public class ConnectionTask implements Runnable {
 
 	/**
 	 * Method to execute upon client connections.
-	 *
+	 *<p></p>
 	 * Extracts the HTTP-request from the socket connection,
 	 * parses the request and then passes the request on the the
 	 * correct service.
