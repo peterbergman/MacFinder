@@ -1,5 +1,7 @@
 package org.macfinder;
 
+import org.macfinder.service.location.GeoLookup;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ public class Ping {
 
 	private Date timestamp;
 	private List<AccessPoint> wifiAccessPoints;
+	private GeoLookup geoLookup;
 
 	/**
 	 * Constructs a new Ping-object.
@@ -28,6 +31,10 @@ public class Ping {
 
 	public Date getTimestamp() {
 		return timestamp;
+	}
+
+	public void setGeoLookup(GeoLookup geoLookup) {
+		this.geoLookup = geoLookup;
 	}
 
 	/**
