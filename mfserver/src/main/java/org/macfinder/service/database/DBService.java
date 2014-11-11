@@ -1,4 +1,4 @@
-package org.macfinder.service.location;
+package org.macfinder.service.database;
 
 import com.google.gson.Gson;
 import com.mongodb.*;
@@ -76,7 +76,7 @@ public class DBService {
 	}
 
 	/**
-	 * Method to retrieve an exsting user from the databse.
+	 * Method to retrieve an exsting user from the database.
 	 *
 	 * @param user	a User object to form the query,
 	 *              must consist of at least a username
@@ -90,7 +90,7 @@ public class DBService {
 	}
 
 	/**
-	 * Internal helper method to close the databse connection.
+	 * Internal helper method to close the database connection.
 	 */
 	private void close() {
 		LOGGER.info("Closing DB connection...");
