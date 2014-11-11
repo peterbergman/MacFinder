@@ -61,22 +61,22 @@ public class DBService {
 	 *                          must be an existing user
 	 */
 	public void update(User updateUserData) {
-		LOGGER.info("Inserting new location...");
+		LOGGER.info("Updating user data...");
 		User existingUser = get(updateUserData);
 		if (existingUser != null) {
 			existingUser.addMachine(updateUserData.getMachines().get(0));
 			BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
 			BasicDBObject query = new BasicDBObject("username", updateUserData.getUsername()).append("password", updateUserData.getPassword());
 			collection.update(query, document);
-			LOGGER.info("Updated record for updateUserData: " + updateUserData.getUsername());
+			LOGGER.info("Updated record for user: " + updateUserData.getUsername());
 		} else {
-			LOGGER.warning("Authentication failed for updateUserData: " + updateUserData.getUsername());
+			LOGGER.warning("Authentication failed for user: " + updateUserData.getUsername());
 		}
 		close();
 	}
 
 	/**
-	 * Method to retrieve an exsting user from the database.
+	 * Method to retrieve an existing user from the database.
 	 *
 	 * @param user	a User object to form the query,
 	 *              must consist of at least a username
