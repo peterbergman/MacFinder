@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.model;
 
 import java.util.Date;
 import java.util.List;

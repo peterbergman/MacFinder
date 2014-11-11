@@ -1,6 +1,7 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
+import org.macfinder.model.User;
 
 import java.io.*;
 import java.net.HttpURLConnection;
