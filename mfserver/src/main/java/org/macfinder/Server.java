@@ -19,7 +19,7 @@ public class Server {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
-	private final static int PORT = 80;
+	private final static int PORT = 8080;
 	private final static int QUEUE_LENGTH = 50;
 	private final static int THREAD_COUNT = 4;
 	private ServerSocket serverSocket;

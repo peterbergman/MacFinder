@@ -21,7 +21,7 @@ public class NetworkInfo {
 	 *
 	 * @return List	a list of access points
 	 */
-	public List<AccessPoint> getNetworks() {
+	public static List<AccessPoint> getNetworks() {
 		List<AccessPoint> accessPoints = new ArrayList<AccessPoint>();
 		String networkInfo = getNetworkInfo();
 		Pattern pattern = Pattern.compile("([a-fA-F0-9]{2}[:-]){5}[a-fA-F0-9]{2}[ ][-][1-9]{1,2}");
@@ -40,7 +40,7 @@ public class NetworkInfo {
 	 *
 	 * @return String the output from the network scan
 	 */
-	private String getNetworkInfo() {
+	private static String getNetworkInfo() {
 		String line = "";
 		StringBuffer info = new StringBuffer();
 		try {

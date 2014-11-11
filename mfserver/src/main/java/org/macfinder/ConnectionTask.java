@@ -96,9 +96,8 @@ public class ConnectionTask implements Runnable {
 
 	private void handleAgentRequest(String data) {
 		LOGGER.info("Handling agent request...");
-		AgentRequest agentRequest = new Gson().fromJson(data, AgentRequest.class);
-		LocationService locationService = new LocationService(new LocationServicerequest(agentRequest.getWifiAccessPoints()));
+		User user = new Gson().fromJson(data, User.class);
 		DBService dbService = new DBService();
-		dbService.put(agentRequest.getUsername(), agentRequest.getPassword(), locationService.lookupLocation());
+		dbService.put(user);
 	}
 }

@@ -12,7 +12,7 @@ import java.net.URL;
 public class ServerConnection {
 
 	//private static final String SERVER_ADDRESS = "https://3cxivtljvvbg.runscope.net";
-	private static final String SERVER_ADDRESS = "http://192.168.1.74/agent";
+	private static final String SERVER_ADDRESS = "http://192.168.1.74:8080/agent";
 
 	/**
 	 * Sends data to the MacFinder server.
@@ -23,7 +23,7 @@ public class ServerConnection {
 	 *              		needed to communicate with the server
 	 * @throws IOException	if the internal HttpURLConnection fails for any reason
 	 */
-	public void sendData(AgentRequest data) throws IOException{
+	public static void sendData(User data) throws IOException{
 		String jsonData = new Gson().toJson(data);
 		try {
 			URL url = new URL(SERVER_ADDRESS);

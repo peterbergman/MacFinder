@@ -1,13 +1,9 @@
 package org.macfinder.service.location;
 
 import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.mongodb.util.JSON;
 import org.macfinder.User;
-
 import java.net.UnknownHostException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
@@ -30,6 +26,7 @@ public class DBService {
 
 	private MongoClient mongoClient;
 	private DBCollection collection;
+	private Gson gson;
 
 	public DBService() {
 		try {
@@ -37,24 +34,32 @@ public class DBService {
 			mongoClient = new MongoClient(DB_URL);
 			DB dataBase = mongoClient.getDB(DB_NAME);
 			collection = dataBase.getCollection(COLLECTION_NAME);
+			gson = new Gson();
 			LOGGER.info("DB connected!");
 		} catch (UnknownHostException uhe) {
 			LOGGER.severe(uhe.toString());
 		}
 	}
 
-	public void put(String username, String password, GeoLookup geoLookup) {
+	public void put(User user) {
 		LOGGER.info("Inserting new location...");
-		User user = new User(username, password);
-		if (authenticate(user)) {
-			user.addLocation(geoLookup);
-			BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(user)));
-			collection.insert(document);
-			LOGGER.info("Location inserted for user: " + username);
+		User existingUser = get(user);
+		if (existingUser != null) {
+			existingUser.addMachine(user.getLastMachine());
+			BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
+			BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
+			collection.update(query, document);
+			LOGGER.info("Updated record for user: " + user.getUsername());
 		} else {
-			LOGGER.warning("Authentication failed for user: " + username);
+			LOGGER.warning("Authentication failed for user: " + user.getUsername());
 		}
 		close();
+	}
+
+	public User get(User user) {
+		BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
+		DBObject foundUser = collection.findOne(query);
+		return gson.fromJson(gson.toJson(foundUser), User.class);
 	}
 
 	private void close() {
@@ -63,12 +68,6 @@ public class DBService {
 			mongoClient.close();
 		}
 		LOGGER.info("DB connection closed!");
-	}
-
-	private boolean authenticate(User user) {
-		BasicDBObject userDocument = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
-		int result = collection.find(userDocument).limit(1).count();
-		return result == 1;
 	}
 
 }

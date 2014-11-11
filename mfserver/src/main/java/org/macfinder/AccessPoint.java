@@ -20,4 +20,14 @@ public class AccessPoint {
 	public int getSignalStrength() {
 		return signalStrength;
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof AccessPoint) {
+			AccessPoint otherAccessPoint = (AccessPoint) other;
+			return macAddress.equalsIgnoreCase(otherAccessPoint.getMacAddress());
+		} else {
+			return false;
+		}
+	}
 }
