@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.utility;
 
 import org.macfinder.model.AccessPoint;
 

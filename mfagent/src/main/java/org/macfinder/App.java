@@ -3,6 +3,7 @@ package org.macfinder;
 import org.macfinder.model.Machine;
 import org.macfinder.model.Ping;
 import org.macfinder.model.User;
+import org.macfinder.utility.NetworkInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
