@@ -5,7 +5,7 @@ package org.macfinder;
  */
 public class App {
     public static void main(String[] args) {
-		Server server = new Server();
-		server.open();
+		Server server = new Server(8080, 50, 4);
+		server.start();
     }
 }
