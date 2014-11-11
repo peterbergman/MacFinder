@@ -1,7 +1,7 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
-import org.macfinder.service.location.DBService;
+import org.macfinder.service.database.DBService;
 
 import java.io.*;
 import java.net.Socket;
