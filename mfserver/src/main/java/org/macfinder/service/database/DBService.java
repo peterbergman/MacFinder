@@ -69,10 +69,7 @@ public class DBService {
 			BasicDBObject query = new BasicDBObject("username", updateUserData.getUsername()).append("password", updateUserData.getPassword());
 			collection.update(query, document);
 			LOGGER.info("Updated record for user: " + updateUserData.getUsername());
-		} else {
-			LOGGER.warning("Authentication failed for user: " + updateUserData.getUsername());
 		}
-		close();
 	}
 
 	/**
@@ -84,15 +81,19 @@ public class DBService {
 	 * 				User object in the query. Null if not found.
 	 */
 	public User get(User user) {
+		LOGGER.info("Looking for user: " + user.getUsername() + " ...");
 		BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
 		DBObject foundUser = collection.findOne(query);
+		if (foundUser == null) {
+			LOGGER.warning("Authentication failed for user: " + user.getUsername());
+		}
 		return gson.fromJson(gson.toJson(foundUser), User.class);
 	}
 
 	/**
-	 * Internal helper method to stop the database connection.
+	 * Method to close the DBService
 	 */
-	private void close() {
+	public void close() {
 		LOGGER.info("Closing DB connection...");
 		if (mongoClient != null) {
 			mongoClient.close();
