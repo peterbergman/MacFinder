@@ -3,6 +3,8 @@ package org.macfinder;
 import com.google.gson.Gson;
 import org.macfinder.model.RequestType;
 import org.macfinder.model.User;
+import org.macfinder.model.http.HTTPRequest;
+import org.macfinder.model.http.HTTPResponse;
 import org.macfinder.service.database.DBService;
 
 import java.io.*;
@@ -20,7 +22,12 @@ public class ConnectionTask implements Runnable {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
 	}
+
+	private final static Gson GSON = new Gson();
+
 	private Socket socket;
+	private BufferedReader reader = null;
+	private BufferedWriter writer = null;
 
 	/**
 	 * Constructs a new ClientConnection-object.
@@ -38,73 +45,120 @@ public class ConnectionTask implements Runnable {
 	 * parses the request and then passes the request on the the
 	 * correct service.
 	 */
+	@Override
 	public void run() {
 		LOGGER.info("Connection active!");
-		String request = parseRequest();
-		if (validRequest(request)) {
-			String[] requestArray = request.split("\n\n");
-			String headers = requestArray[0];
-			String data = requestArray[1];
-			if (requestType(headers).equals(RequestType.AGENT)) {
-				handleAgentRequest(data);
-			} else if (requestType(headers).equals(RequestType.CLIENT)) {
-				// TODO: handle client stuff
+		try {
+			HTTPRequest request = parseRequest();
+			if (request != null) {
+				if (requestType(request.getPath()).equals(RequestType.AGENT)) {
+					handleAgentRequest(request);
+				} else if (requestType(request.getPath()).equals(RequestType.CLIENT)) {
+					handleClientRequest(request);
+				}
+			} else {
+				LOGGER.info("Invalid request received and discarded!");
 			}
+		} catch (IOException ioe) {
+			LOGGER.severe(ioe.toString());
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+				if (writer != null) {
+					writer.close();
+				}
+			} catch (IOException ioe){};
 		}
 	}
 
 	/**
 	 * Helper method to parse the HTTP-request.
 	 *
-	 * @return	a string containing the data from the request, both headers and body
+	 * @return				a HTTPRequest object with the body and headers separated
+	 * @throws IOException	if something went wrong opening the stream from the client
 	 */
-	private String parseRequest() {
-		StringBuilder request = new StringBuilder();
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				request.append(line + "\n");
-			}
-		} catch (IOException ioe) {
-			LOGGER.severe(ioe.toString());
+	private HTTPRequest parseRequest() throws IOException {
+		HTTPRequest request = null;
+		StringBuilder stringBuilder = new StringBuilder();
+		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		String line;
+
+		while ((line = reader.readLine()).length() != 0) {
+			stringBuilder.append(line + " ");
 		}
-		return request.toString();
+		if (validateRequest(stringBuilder.toString())) {
+			request = new HTTPRequest();
+			request.setHeaders(stringBuilder.toString().replaceAll(":", "").split(" "));
+			stringBuilder.setLength(0);
+			int contentLength = Integer.parseInt(request.getHeaderValue("Content-Length"));
+
+			for (int i = 0; i < contentLength; i++) {
+				stringBuilder.append((char)reader.read());
+			}
+
+			request.setBody(stringBuilder.toString());
+		}
+		return request;
 	}
 
 	/**
 	 * Method to validate the HTTP-request.
 	 *
-	 * @param request	a string with the data from the request, both headers and body
-	 * @return			true if the request target matches one of the known endpoints,
-	 * 					and if the request contains a valid separation between headers and body
+	 * @param requestHeaders	a string with the headers from the request,
+	 * @return					true if the request is a POST request and
+	 * 							the target matches one of the known endpoints
 	 */
-	private boolean validRequest(String request) {
-		return (request.contains("/agent") || request.contains("/client")) && request.contains("\n\n");
+	private boolean validateRequest(String requestHeaders) {
+		return (requestHeaders.contains("/agent") || requestHeaders.contains("/client")) && requestHeaders.contains("POST");
 	}
 
 	/**
 	 * Helper method to compute the request type.
 	 *
-	 * @param headers		the headers of the HTTP-request
-	 * @return RequestType	RequestType.AGENT if the endpoint is /agent,
-	 * 						otherwise RequestType.CLIENT
+	 * @param requestPath		the path of the HTTP-request
+	 * @return RequestType		RequestType.AGENT if the endpoint is /agent,
+	 * 							otherwise RequestType.CLIENT
 	 */
-	private RequestType requestType(String headers) {
-		return (headers.contains("/agent") ? RequestType.AGENT : RequestType.CLIENT);
+	private RequestType requestType(String requestPath) {
+		return (requestPath.equals("/agent") ? RequestType.AGENT : RequestType.CLIENT);
 	}
 
 	/**
 	 * Helper method to handle requests sent from an agent.
 	 *
-	 * @param data	the data sent from the agent, assumes
+	 * @param request    the data sent from the agent, assumes
 	 *              that this is a JSON-string representing
 	 *              a User object.
 	 */
-	private void handleAgentRequest(String data) {
+	private void handleAgentRequest(HTTPRequest request) {
 		LOGGER.info("Handling agent request...");
-		User user = new Gson().fromJson(data, User.class);
+		User user = GSON.fromJson(request.getBody(), User.class);
 		DBService dbService = new DBService();
 		dbService.update(user);
+		dbService.close();
+	}
+
+	private void handleClientRequest(HTTPRequest request) throws IOException{
+		LOGGER.info("Handling client request...");
+		User user = GSON.fromJson(request.getBody(), User.class);
+		DBService dbService = new DBService();
+		User existingUser = dbService.get(user);
+		dbService.close();
+		HTTPResponse response = new HTTPResponse(GSON.toJson(existingUser));
+		sendResponse(response);
+	}
+
+	/**
+	 * Method to send back response to the client.
+	 *
+	 * @param response		the response to send back to the client
+	 * @throws IOException	if something went wrong when opening the stream to the client
+	 */
+	private void sendResponse(HTTPResponse response) throws IOException {
+		writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		writer.write(response.toString());
+		writer.flush();
 	}
 }
