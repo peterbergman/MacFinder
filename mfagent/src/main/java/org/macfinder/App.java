@@ -4,6 +4,7 @@ import org.macfinder.model.Machine;
 import org.macfinder.model.Ping;
 import org.macfinder.model.User;
 import org.macfinder.utility.NetworkInfo;
+import org.macfinder.utility.ServerConnection;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,8 +20,6 @@ public class App {
 			machine.addPing(ping);
 			user.addMachine(machine);
 			ServerConnection.sendData(user);
-		} catch (IOException ioe) {
-			System.err.println(ioe);
-		}
+		} catch (IOException ioe) {}
     }
 }
