@@ -1,4 +1,4 @@
-package org.macfinder;
+package org.macfinder.utility;
 
 import com.google.gson.Gson;
 import org.macfinder.model.User;
@@ -12,8 +12,10 @@ import java.net.URL;
  */
 public class ServerConnection {
 
-	//private static final String SERVER_ADDRESS = "https://3cxivtljvvbg.runscope.net";
-	private static final String SERVER_ADDRESS = "http://192.168.1.74:8080/agent";
+	//private static final String SERVER_ADDRESS = "https://3cxivtljvvbg.runscope.net"; //Runscope
+	//private static final String SERVER_ADDRESS = "http://192.168.1.74:8080/client"; //Home
+	private static final String SERVER_ADDRESS = "http://130.237.241.80:8080/agent"; //DSV
+
 
 	/**
 	 * Sends data to the MacFinder server.
@@ -24,7 +26,7 @@ public class ServerConnection {
 	 *              		needed to communicate with the server
 	 * @throws IOException	if the internal HttpURLConnection fails for any reason
 	 */
-	public static void sendData(User data) throws IOException{
+	public static User sendData(User data) {
 		String jsonData = new Gson().toJson(data);
 		try {
 			URL url = new URL(SERVER_ADDRESS);
@@ -32,17 +34,22 @@ public class ServerConnection {
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);
 			connection.setFixedLengthStreamingMode(jsonData.getBytes().length);
+			connection.setRequestProperty("Content-Length", jsonData.getBytes().length + "");
 			connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-			connection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
-			connection.connect();
+			//connection.connect();
 			OutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
 			outputStream.write(jsonData.getBytes());
 			outputStream.flush();
 			outputStream.close();
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			reader.close();
+
 			connection.disconnect();
 		} catch (IOException ioe) {
 
 		}
+		return null;
 	}
 
 }
