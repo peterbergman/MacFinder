@@ -68,7 +68,7 @@ public class Machine {
 	 * <p></p>
 	 * The hash code is calculated by calling hashCode on the name of the Machine
 	 *
-	 * @return a hash code value for this object
+	 * @return	a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {

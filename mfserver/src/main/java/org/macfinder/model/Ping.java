@@ -58,6 +58,7 @@ public class Ping {
 		if (other != null && other instanceof Ping) {
 			Ping otherPing = (Ping) other;
 			if (wifiAccessPoints.size() != 0 && otherPing.getWifiAccessPoints().size() != 0) {
+				// TODO: make this check more clever, should be able to check if diff is > 50 %
 				return wifiAccessPoints.containsAll(otherPing.getWifiAccessPoints()) &&
 						otherPing.getWifiAccessPoints().containsAll(wifiAccessPoints);
 			} else {
@@ -77,7 +78,7 @@ public class Ping {
 	 * If the Ping does not contain any AccessPoints, then the
 	 * hash code is calculated by calling hashCode on the timestamp.
 	 *
-	 * @return a hash code value for this object
+	 * @return	a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {

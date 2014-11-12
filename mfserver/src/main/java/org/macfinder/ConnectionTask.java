@@ -128,9 +128,9 @@ public class ConnectionTask implements Runnable {
 	/**
 	 * Helper method to handle requests sent from an agent.
 	 *
-	 * @param request    the data sent from the agent, assumes
-	 *              that this is a JSON-string representing
-	 *              a User object.
+	 * @param request	the data sent from the agent, assumes
+	 *              	that this is a JSON-string representing
+	 *              	a User object.
 	 */
 	private void handleAgentRequest(HTTPRequest request) {
 		LOGGER.info("Handling agent request...");
@@ -145,6 +145,13 @@ public class ConnectionTask implements Runnable {
 		User user = GSON.fromJson(request.getBody(), User.class);
 		DBService dbService = new DBService();
 		User existingUser = dbService.get(user);
+
+		// If request.method == GET
+		// iterate over all of the user's machines
+		// if the latest ping for the machine does not have a geo lookup
+		// then do the geo lookup based on that ping and add it to the machine
+		// then update user in the DB
+
 		dbService.close();
 		HTTPResponse response = new HTTPResponse(GSON.toJson(existingUser));
 		sendResponse(response);

@@ -47,7 +47,7 @@ public class AccessPoint {
 	 * The hash code is calculated by calling hashCode on the mac address
 	 * of the AccessPoint.
 	 *
-	 * @return a hash code value for this object
+	 * @return	a hash code value for this object
 	 */
 	@Override
 	public int hashCode() {
