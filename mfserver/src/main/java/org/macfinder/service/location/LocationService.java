@@ -1,6 +1,7 @@
 package org.macfinder.service.location;
 
 import com.google.gson.Gson;
+import org.macfinder.model.GeoLookup;
 
 import java.io.*;
 import java.net.HttpURLConnection;

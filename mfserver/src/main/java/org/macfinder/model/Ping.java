@@ -1,7 +1,5 @@
 package org.macfinder.model;
 
-import org.macfinder.service.location.GeoLookup;
-
 import java.util.Date;
 import java.util.List;
 
