@@ -1,10 +1,13 @@
 package org.macfinder.controller;
 
+import org.macfinder.model.User;
+import org.macfinder.utility.ServerConnection;
 import org.macfinder.view.LoginView;
 import org.macfinder.view.MainView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Class to act as a controller for the login view.
@@ -28,6 +31,8 @@ public class LoginController {
 	private class LoginButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			User user = new User(loginView.getUsername(), loginView.getPassword());
+			User existingUser = ServerConnection.sendData(user);
 			if (loginView.getUsername().equals("") && loginView.getPassword().equals("")) {
 				loginView.close();
 				MainController mainController = new MainController();
