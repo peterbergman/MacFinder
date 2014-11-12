@@ -1,4 +1,4 @@
-package org.macfinder.service.location;
+package org.macfinder.model;
 
 /**
  * Class to represent a position returned by the location API.
