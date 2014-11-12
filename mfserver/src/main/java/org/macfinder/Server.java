@@ -48,7 +48,7 @@ public class Server {
 		try {
 			InetAddress localHost = InetAddress.getLocalHost();
 			serverSocket = new ServerSocket(port, queueLength, localHost);
-			LOGGER.info("Server started!");
+			LOGGER.info("Server started on " + serverSocket.getInetAddress().getHostAddress());
 			while (true) {
 				Socket socket = serverSocket.accept();
 				Runnable task = new ConnectionTask(socket);
