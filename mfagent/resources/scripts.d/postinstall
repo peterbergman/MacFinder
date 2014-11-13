@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+launchctl unload -w /Library/LaunchDaemons/org.macfinder.agent.plist || true
+launchctl load -w /Library/LaunchDaemons/org.macfinder.agent.plist
+
