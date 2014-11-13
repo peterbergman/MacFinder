@@ -34,11 +34,29 @@ public class Machine {
 	/**
 	 * Adds a new ping to the Machine's list of pings,
 	 * if the pings is not already present in the list.
+	 * <p></p>
+	 * If the ping is present in the list and the new ping has
+	 * a GeoLookup object attached to it, then the lookup is
+	 * added to the existing ping. This will also replace any current
+	 * lookups attached to that ping.
 	 *
 	 * @param ping	the Ping to add
 	 */
 	public void addPing(Ping ping) {
-		if (!pings.contains(ping)) {
+
+		boolean foundPing = false;
+
+		for (Ping existingPing : pings) {
+			if (existingPing.equals(ping)) {
+				if (ping.getGeoLookup() != null) {
+					existingPing.setGeoLookup(ping.getGeoLookup());
+				}
+				foundPing = true;
+				break;
+			}
+		}
+
+		if (!foundPing) {
 			pings.add(ping);
 		}
 	}
