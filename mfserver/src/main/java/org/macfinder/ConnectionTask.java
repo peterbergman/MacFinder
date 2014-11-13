@@ -1,16 +1,18 @@
 package org.macfinder;
 
 import com.google.gson.Gson;
-import org.macfinder.model.RequestType;
-import org.macfinder.model.User;
+import org.macfinder.model.*;
 import org.macfinder.model.http.HTTPRequest;
 import org.macfinder.model.http.HTTPResponse;
 import org.macfinder.service.database.DBService;
+import org.macfinder.service.location.LocationService;
+import org.macfinder.service.location.LocationServiceRequest;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -154,19 +156,23 @@ public class ConnectionTask implements Runnable {
 
 	private void handleClientRequest(HTTPRequest request) throws IOException{
 		LOGGER.info("Handling client request...");
+		HTTPResponse response = new HTTPResponse();
 		User user = GSON.fromJson(request.getBody(), User.class);
 		DBService dbService = new DBService();
 		User existingUser = dbService.get(user);
 
-		// If request.method == GET
-		// iterate over all of the user's machines
-		// if the latest ping for the machine does not have a geo lookup
-		// then do the geo lookup based on that ping and add it to the machine
-		// then update user in the DB
+		if (user.getMachines().size() > 0) {
+			List<Ping> pings = user.getMachines().get(0).getPings();
+			List<AccessPoint> accessPoints = pings.get(pings.size()-1).getWifiAccessPoints();
+			LocationServiceRequest lookupRequest = new LocationServiceRequest(accessPoints); // TODO: redundant class?
+			LocationService locationService = new LocationService(lookupRequest);
+			GeoLookup lookup = locationService.lookupLocation();
+			pings.get(0).setGeoLookup(lookup);
+			existingUser = dbService.update(user, existingUser);
+		}
 
-		dbService.close();
-		HTTPResponse response = new HTTPResponse();
 		response.setBody(URLEncoder.encode(GSON.toJson(existingUser), "utf-8"));
+		dbService.close();
 		sendResponse(response);
 	}
 
