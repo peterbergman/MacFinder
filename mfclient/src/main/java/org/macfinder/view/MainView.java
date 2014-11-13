@@ -2,6 +2,7 @@ package org.macfinder.view;
 
 import org.macfinder.model.Machine;
 
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,14 @@ public class MainView extends JFrame {
 
 	public void setMachines(List<Machine> machines) {
 		machineList.setListData(machines.toArray(new Machine[machines.size()]));
+	}
+
+	public Machine getSelectedMachine() {
+		return machineList.getSelectedValue();
+	}
+
+	public void addLookupButtonActionListener(ActionListener actionListener) {
+		lookupLocationButton.addActionListener(actionListener);
 	}
 
 	private void setUpMapComponent() {
