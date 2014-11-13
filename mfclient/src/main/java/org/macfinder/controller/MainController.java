@@ -1,5 +1,6 @@
 package org.macfinder.controller;
 
+import org.macfinder.model.User;
 import org.macfinder.view.MainView;
 
 import javax.swing.*;
@@ -12,9 +13,11 @@ import java.net.URL;
 public class MainController {
 
 	private MainView mainView;
+	private User user;
 
-	public MainController() {
+	public MainController(User user) {
 		mainView = new MainView();
+		this.user = user;
 	}
 
 	public void start() {
