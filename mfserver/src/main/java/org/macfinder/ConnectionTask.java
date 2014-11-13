@@ -9,6 +9,7 @@ import org.macfinder.service.database.DBService;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -97,8 +98,8 @@ public class ConnectionTask implements Runnable {
 			for (int i = 0; i < contentLength; i++) {
 				stringBuilder.append((char)reader.read());
 			}
-
-			request.setBody(stringBuilder.toString());
+			String decodedBody = URLDecoder.decode(stringBuilder.toString(), "utf-8");
+			request.setBody(decodedBody);
 		}
 		return request;
 	}
@@ -132,12 +133,22 @@ public class ConnectionTask implements Runnable {
 	 *              	that this is a JSON-string representing
 	 *              	a User object.
 	 */
-	private void handleAgentRequest(HTTPRequest request) {
+	private void handleAgentRequest(HTTPRequest request) throws IOException{
 		LOGGER.info("Handling agent request...");
-		User user = GSON.fromJson(request.getBody(), User.class);
 		DBService dbService = new DBService();
-		dbService.update(user);
+		User updatedUser = GSON.fromJson(request.getBody(), User.class);
+		User existingUser = dbService.get(updatedUser);
+		HTTPResponse response = new HTTPResponse();
+		if (existingUser != null) {
+			response.setBody(request.getBody());
+			if (updatedUser.getMachines().size() > 0) {
+				dbService.update(updatedUser, existingUser);
+			}
+		} else {
+			response.setStatusCode(401);
+		}
 		dbService.close();
+		sendResponse(response);
 	}
 
 	private void handleClientRequest(HTTPRequest request) throws IOException{
@@ -153,7 +164,8 @@ public class ConnectionTask implements Runnable {
 		// then update user in the DB
 
 		dbService.close();
-		HTTPResponse response = new HTTPResponse(GSON.toJson(existingUser));
+		HTTPResponse response = new HTTPResponse();
+		response.setBody(GSON.toJson(existingUser));
 		sendResponse(response);
 	}
 

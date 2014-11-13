@@ -57,19 +57,16 @@ public class DBService {
 	 * Assumes that the updatedUserData only contains one single machine to add or update
 	 * to the existing user.
 	 *
-	 * @param updateUserData	the updated user data sent from the agent,
+	 * @param updatedUser	the updated user data sent from the agent,
 	 *                          must be an existing user
 	 */
-	public void update(User updateUserData) {
+	public void update(User updatedUser, User existingUser) {
 		LOGGER.info("Updating user data...");
-		User existingUser = get(updateUserData);
-		if (existingUser != null) {
-			existingUser.addMachine(updateUserData.getMachines().get(0));
-			BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
-			BasicDBObject query = new BasicDBObject("username", updateUserData.getUsername()).append("password", updateUserData.getPassword());
-			collection.update(query, document);
-			LOGGER.info("Updated record for user: " + updateUserData.getUsername());
-		}
+		existingUser.addMachine(updatedUser.getMachines().get(0));
+		BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
+		BasicDBObject query = new BasicDBObject("username", updatedUser.getUsername()).append("password", updatedUser.getPassword());
+		collection.update(query, document);
+		LOGGER.info("Updated record for user: " + updatedUser.getUsername());
 	}
 
 	/**
