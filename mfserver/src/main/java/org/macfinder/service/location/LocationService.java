@@ -23,9 +23,9 @@ public class LocationService {
 	private final static String API_KEY = "AIzaSyDOaDCgsCqvglqKxR8jvoo0XOHPxamWtzI";
 	private final static String SERVER_ADDRESS = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + API_KEY;
 
-	private LocationServicerequest request;
+	private LocationServiceRequest request;
 
-	public LocationService(LocationServicerequest request) {
+	public LocationService(LocationServiceRequest request) {
 		this.request = request;
 	}
 
