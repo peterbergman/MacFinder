@@ -1,13 +1,14 @@
 package org.macfinder.model;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Class to represent a ping sent from a machine.
  */
-public class Ping {
+public class Ping implements Serializable{
 
 	private Date timestamp;
 	private List<AccessPoint> wifiAccessPoints;

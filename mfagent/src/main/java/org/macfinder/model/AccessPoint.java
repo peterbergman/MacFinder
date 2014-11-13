@@ -1,9 +1,11 @@
 package org.macfinder.model;
 
+import java.io.Serializable;
+
 /**
  * Class to represent a WiFi access point.
  */
-public class AccessPoint {
+public class AccessPoint implements Serializable {
 
 	private String macAddress;
 	private int signalStrength;

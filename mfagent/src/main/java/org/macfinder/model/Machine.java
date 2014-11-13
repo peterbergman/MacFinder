@@ -1,12 +1,13 @@
 package org.macfinder.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class to represent a machine.
  */
-public class Machine {
+public class Machine implements Serializable{
 
 	private String name;
 	private List<Ping> pings;
