@@ -43,7 +43,7 @@ public class HTTPResponse {
 	}
 
 	public void setBody(String body) throws IOException {
-		this.body = URLEncoder.encode(body, "utf-8");
+		this.body = body;
 		headers.put("Content-Length", this.body.getBytes().length + "");
 	}
 
