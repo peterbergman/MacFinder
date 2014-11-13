@@ -10,6 +10,7 @@ import org.macfinder.service.database.DBService;
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -165,7 +166,7 @@ public class ConnectionTask implements Runnable {
 
 		dbService.close();
 		HTTPResponse response = new HTTPResponse();
-		response.setBody(GSON.toJson(existingUser));
+		response.setBody(URLEncoder.encode(GSON.toJson(existingUser), "utf-8"));
 		sendResponse(response);
 	}
 
