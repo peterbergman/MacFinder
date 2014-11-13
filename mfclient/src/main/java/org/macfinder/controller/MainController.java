@@ -40,7 +40,7 @@ public class MainController {
 	private class LookupButtonActionActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			
+
 		}
 	}
 }
