@@ -4,6 +4,8 @@ import org.macfinder.model.User;
 import org.macfinder.view.MainView;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -17,6 +19,7 @@ public class MainController {
 
 	public MainController(User user) {
 		mainView = new MainView();
+		mainView.setMachines(user.getMachines());
 		this.user = user;
 	}
 
@@ -32,5 +35,12 @@ public class MainController {
 		try {
 			mainView.setMap(new ImageIcon(new URL(url)));
 		} catch (MalformedURLException mfe) {};
+	}
+
+	private class LookupButtonActionActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			
+		}
 	}
 }
