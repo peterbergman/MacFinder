@@ -47,33 +47,32 @@ public class DBService {
 	/**
 	 * Updates a user in the database.
 	 *
-	 * First tries to retrieve the existing user data from the database.
-	 * If this fails, then no update is made. If this is successful, then
-	 * the machines from the updatedUserData is added to the list of machines
+	 * The machines from the updatedUserData is added to the list of machines
 	 * from the existing user. This involves both merging of existing machines
-	 * and adding of new machines.
+	 * and adding of new machines as well as adding geo lookups to existing pings.
 	 * Then the existing (and now updated) user is placed back in the database.
 	 * <p></p>
 	 * Assumes that the updatedUserData only contains one single machine to add or update
 	 * to the existing user.
 	 *
-	 * @param updatedUser	the updated user data sent from the agent,
-	 *                          must be an existing user
+	 * @param updatedUser	the updated user data
+	 * @param existingUser	the existing user to update
+	 * @return 				the updated and existing user merged to one user object
 	 */
-	public void update(User updatedUser, User existingUser) {
+	public User update(User updatedUser, User existingUser) {
 		LOGGER.info("Updating user data...");
 		existingUser.addMachine(updatedUser.getMachines().get(0));
 		BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(existingUser)));
 		BasicDBObject query = new BasicDBObject("username", updatedUser.getUsername()).append("password", updatedUser.getPassword());
 		collection.update(query, document);
 		LOGGER.info("Updated record for user: " + updatedUser.getUsername());
+		return existingUser;
 	}
 
 	/**
 	 * Method to retrieve an existing user from the database.
 	 *
-	 * @param user	a User object to form the query,
-	 *              must consist of at least a username
+	 * @param user	a User object to form the query
 	 * @return		the User object found in the database that matches the
 	 * 				User object in the query. Null if not found.
 	 */
