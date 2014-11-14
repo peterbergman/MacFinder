@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * Class to act as a controller for the login view.
  */
-public class LoginController {
+public class LoginController implements Controller {
 
 	private final static Gson GSON = new Gson();
 
@@ -30,6 +30,21 @@ public class LoginController {
 		loginView.open();
 	}
 
+	public void workerCallback(HTTPResponse response) {
+		if (response.getStatusCode() == 200) {
+			loginView.close();
+			User user = GSON.fromJson(response.getBody(), User.class);
+			MainController mainController = new MainController(user);
+			mainController.start();
+		} else {
+			JOptionPane.showMessageDialog(loginView, "Login failed!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public void workerCallback(ImageIcon imageIcon) {
+		// no-op
+	}
+
 	/**
 	 * Class to handle click on the login button.
 	 */
@@ -37,15 +52,7 @@ public class LoginController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			User user = new User(loginView.getUsername(), loginView.getPassword());
-			HTTPResponse response = ServerConnection.sendData(user);
-			if (response.getStatusCode() == 200) {
-				loginView.close();
-				user = GSON.fromJson(response.getBody(), User.class);
-				MainController mainController = new MainController(user);
-				mainController.start();
-			} else {
-				JOptionPane.showMessageDialog(loginView, "Login failed!", "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			(new ServerConnectionWorker(LoginController.this, user)).execute();
 		}
 	}
 

@@ -2,10 +2,10 @@ package org.macfinder.controller;
 
 import com.google.gson.Gson;
 import org.macfinder.model.Machine;
+import org.macfinder.model.Ping;
 import org.macfinder.model.User;
 import org.macfinder.model.http.HTTPResponse;
 import org.macfinder.utility.MapServerConnection;
-import org.macfinder.utility.ServerConnection;
 import org.macfinder.view.MainView;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Class to act as a controller for the main view.
  */
-public class MainController {
+public class MainController implements Controller {
 
 	private final static Gson GSON = new Gson();
 
@@ -37,14 +37,23 @@ public class MainController {
 		mainView.open();
 		String url = "http://maps.googleapis.com/maps/api/staticmap?"
 				+ "center=59.4030598,17.9813378"
-				+ "&zoom=14"
+				+ "&zoom=10"
 				+ "&size=640x640"
 				+ "&maptype=roadmap"
-				+ "&markers=color:red%7Ccolor:red%7C59.4030598,17.9813378"
 				+ "&sensor=false";
 		try {
 			mainView.setMap(new ImageIcon(new URL(url)));
 		} catch (MalformedURLException mfe) {};
+	}
+
+	public void workerCallback(HTTPResponse response) {
+		user = GSON.fromJson(response.getBody(), User.class);
+		List<Ping> pings = mainView.getSelectedMachine().getPings();
+		(new MapServerConnectionWorker(this, pings.get(pings.size()-1).getGeoLookup())).execute();
+	}
+
+	public void workerCallback(ImageIcon imageIcon) {
+		mainView.setMap(imageIcon);
 	}
 
 	private class LookupButtonActionActionListener implements ActionListener {
@@ -54,10 +63,7 @@ public class MainController {
 			selectedMachine.add(mainView.getSelectedMachine());
 			if (selectedMachine.size() != 0) {
 				user.getMachines().retainAll(selectedMachine);
-				HTTPResponse response = ServerConnection.sendData(user);
-				user = GSON.fromJson(response.getBody(), User.class);
-				ImageIcon image = MapServerConnection.getImageFromLookup(mainView.getSelectedMachine().getPings().get(0).getGeoLookup());
-				mainView.setMap(image);
+				(new ServerConnectionWorker(MainController.this, user)).execute();
 			}
 		}
 	}
