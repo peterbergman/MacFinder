@@ -61,7 +61,7 @@ public class User {
 		} else {
 			for (Machine existingMachine : machines) {
 				if (existingMachine.equals(machine)) {
-					existingMachine.addPing(machine.getPings().get(0));
+					existingMachine.addPing(machine.getPings().get(machine.getPings().size() - 1));
 					foundMachine = true;
 					break;
 				}
