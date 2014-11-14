@@ -161,14 +161,16 @@ public class ConnectionTask implements Runnable {
 		DBService dbService = new DBService();
 		User existingUser = dbService.get(user);
 
-		if (user.getMachines().size() > 0) {
+		if (existingUser == null) {
+			response.setStatusCode(401);
+		} else if (user.getMachines().size() > 0) {
 			List<Ping> pings = user.getMachines().get(0).getPings();
 			List<AccessPoint> accessPoints = pings.get(pings.size()-1).getWifiAccessPoints();
 			LocationServiceRequest lookupRequest = new LocationServiceRequest(accessPoints); // TODO: redundant class?
 			LocationService locationService = new LocationService(lookupRequest);
 			GeoLookup lookup = locationService.lookupLocation();
 			pings.get(pings.size()-1).setGeoLookup(lookup);
-			existingUser = dbService.update(user, existingUser); // TODO: fix bug in update user
+			existingUser = dbService.update(user, existingUser);
 		}
 
 		response.setBody(URLEncoder.encode(GSON.toJson(existingUser), "utf-8"));
