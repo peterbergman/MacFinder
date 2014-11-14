@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.macfinder.model.Machine;
 import org.macfinder.model.User;
 import org.macfinder.model.http.HTTPResponse;
+import org.macfinder.utility.MapServerConnection;
 import org.macfinder.utility.ServerConnection;
 import org.macfinder.view.MainView;
 
@@ -51,11 +52,12 @@ public class MainController {
 		public void actionPerformed(ActionEvent event) {
 			List<Machine> selectedMachine = new ArrayList<Machine>();
 			selectedMachine.add(mainView.getSelectedMachine());
-			if (selectedMachine != null) {
+			if (selectedMachine.size() != 0) {
 				user.getMachines().retainAll(selectedMachine);
 				HTTPResponse response = ServerConnection.sendData(user);
 				user = GSON.fromJson(response.getBody(), User.class);
-				System.out.println(user);
+				ImageIcon image = MapServerConnection.getImageFromLookup(mainView.getSelectedMachine().getPings().get(0).getGeoLookup());
+				mainView.setMap(image);
 			}
 		}
 	}

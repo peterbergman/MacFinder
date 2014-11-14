@@ -37,6 +37,11 @@ public class Ping {
 		this.geoLookup = geoLookup;
 	}
 
+	public GeoLookup getGeoLookup() {
+		return geoLookup;
+	}
+
+
 	/**
 	 * Compares this Ping to the specified object.
 	 * <p></p>

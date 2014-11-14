@@ -44,6 +44,7 @@ public class MainView extends JFrame {
 
 	public void setMap(ImageIcon image) {
 		mapComponent.setMap(image);
+		mapComponent.repaint();
 	}
 
 	public void setMachines(List<Machine> machines) {
