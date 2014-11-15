@@ -5,7 +5,6 @@ import org.macfinder.model.Machine;
 import org.macfinder.model.Ping;
 import org.macfinder.model.User;
 import org.macfinder.model.http.HTTPResponse;
-import org.macfinder.utility.MapServerConnection;
 import org.macfinder.view.MainView;
 
 import javax.swing.*;

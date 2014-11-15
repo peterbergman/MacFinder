@@ -3,14 +3,11 @@ package org.macfinder.controller;
 import com.google.gson.Gson;
 import org.macfinder.model.User;
 import org.macfinder.model.http.HTTPResponse;
-import org.macfinder.utility.ServerConnection;
 import org.macfinder.view.LoginView;
-import org.macfinder.view.MainView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Class to act as a controller for the login view.

@@ -19,6 +19,8 @@ public class ServerConnection {
 	private final static String SERVER_ADDRESS = "http://192.168.1.74:8080/client"; //Home
 	//private static final String SERVER_ADDRESS = "http://77.238.33.55:8080/client"; //DSV
 
+	private final static Gson GSON = new Gson();
+	
 	/**
 	 * Sends data to the MacFinder server.
 	 *
@@ -29,8 +31,7 @@ public class ServerConnection {
 	 * @throws IOException	if the internal HttpURLConnection fails for any reason
 	 */
 	public static HTTPResponse sendData(User data) {
-		Gson gson = new Gson();
-		String jsonData = gson.toJson(data);
+		String jsonData = GSON.toJson(data);
 		HTTPResponse response = null;
 		try {
 			jsonData = URLEncoder.encode(jsonData, "utf-8");
