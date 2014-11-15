@@ -23,10 +23,10 @@ public class DBService {
 	private final static String DB_URL = "ec2-54-172-75-176.compute-1.amazonaws.com";
 	private final static String DB_NAME = "macfinder";
 	private final static String COLLECTION_NAME = "users";
+	private final static Gson GSON = new Gson();
 
 	private MongoClient mongoClient;
 	private DBCollection collection;
-	private Gson gson;
 
 	/**
 	 * Constructs a new DBService object.
@@ -37,7 +37,6 @@ public class DBService {
 			mongoClient = new MongoClient(DB_URL);
 			DB dataBase = mongoClient.getDB(DB_NAME);
 			collection = dataBase.getCollection(COLLECTION_NAME);
-			gson = new Gson();
 			LOGGER.info("DB connected!");
 		} catch (UnknownHostException uhe) {
 			LOGGER.severe(uhe.toString());
@@ -83,7 +82,7 @@ public class DBService {
 		if (foundUser == null) {
 			LOGGER.warning("Authentication failed for user: " + user.getUsername());
 		}
-		return gson.fromJson(gson.toJson(foundUser), User.class);
+		return GSON.fromJson(GSON.toJson(foundUser), User.class);
 	}
 
 	/**

@@ -13,7 +13,7 @@ public class LoginView extends JFrame {
 	private final static int WIDTH = 500;
 	private final static int HEIGHT = 350;
 	private final static String TITLE = "MacFinder";
-	
+
 	private JPanel contentPanel;
 	private JTextField usernameField;
 	private JPasswordField passwordField;

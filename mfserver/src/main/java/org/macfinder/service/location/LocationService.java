@@ -22,6 +22,7 @@ public class LocationService {
 
 	private final static String API_KEY = "AIzaSyDOaDCgsCqvglqKxR8jvoo0XOHPxamWtzI";
 	private final static String SERVER_ADDRESS = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + API_KEY;
+	private final static Gson GSON = new Gson();
 
 	private LocationServiceRequest request;
 
@@ -62,7 +63,7 @@ public class LocationService {
 			while ((line = reader.readLine()) != null) {
 				output.append(line);
 			}
-			geoLookup = new Gson().fromJson(output.toString(), GeoLookup.class);
+			geoLookup = GSON.fromJson(output.toString(), GeoLookup.class);
 			reader.close();
 			connection.disconnect();
 		} catch (IOException ioe) {
