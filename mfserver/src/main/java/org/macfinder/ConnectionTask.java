@@ -44,36 +44,42 @@ public class ConnectionTask implements Runnable {
 
 	/**
 	 * Method to execute upon client connections.
-	 *<p></p>
-	 * Extracts the HTTP-request from the socket connection,
-	 * parses the request and then passes the request on the the
-	 * correct service.
+	 *
+	 * Delegates the request and then closes the I/O-streams when done.
 	 */
 	@Override
 	public void run() {
 		LOGGER.info("Connection active!");
 		try {
-			HTTPRequest request = parseRequest();
-			if (request != null) {
-				if (requestType(request.getPath()).equals(RequestType.AGENT)) {
-					handleAgentRequest(request);
-				} else if (requestType(request.getPath()).equals(RequestType.CLIENT)) {
-					handleClientRequest(request);
-				}
-			} else {
-				LOGGER.info("Invalid request received and discarded!");
-			}
+			delegateRequest();
 		} catch (IOException ioe) {
 			LOGGER.severe(ioe.toString());
 		} finally {
 			try {
-				if (reader != null) {
-					reader.close();
-				}
-				if (writer != null) {
-					writer.close();
-				}
+				closeStreams();
 			} catch (IOException ioe){};
+		}
+	}
+
+	/**
+	 * Delegates requests.
+	 *
+	 * Extracts the HTTP-request from the socket connection,
+	 * parses the request and then passes the request on the the
+	 * correct handle method.
+	 *
+	 * @throws IOException
+	 */
+	private void delegateRequest() throws IOException {
+		HTTPRequest request = parseRequest();
+		if (request != null) {
+			if (requestType(request.getPath()).equals(RequestType.AGENT)) {
+				handleAgentRequest(request);
+			} else if (requestType(request.getPath()).equals(RequestType.CLIENT)) {
+				handleClientRequest(request);
+			}
+		} else {
+			LOGGER.info("Invalid request received and discarded!");
 		}
 	}
 
@@ -132,9 +138,10 @@ public class ConnectionTask implements Runnable {
 	/**
 	 * Helper method to handle requests sent from an agent.
 	 *
-	 * @param request	the data sent from the agent, assumes
-	 *              	that this is a JSON-string representing
-	 *              	a User object.
+	 * @param request		the data sent from the agent, assumes
+	 *              		that this is a JSON-string representing
+	 *              		a User object.
+	 * @throws IOException
 	 */
 	private void handleAgentRequest(HTTPRequest request) throws IOException{
 		LOGGER.info("Handling agent request...");
@@ -154,6 +161,14 @@ public class ConnectionTask implements Runnable {
 		sendResponse(response);
 	}
 
+	/**
+	 * Helper method to handle requests sent from a client.
+	 *
+	 * @param request			the data sent from the client, assumes
+	 *              			that this is a JSON-string representing
+	 *              			a User object.
+	 * @throws IOException
+	 */
 	private void handleClientRequest(HTTPRequest request) throws IOException{
 		LOGGER.info("Handling client request...");
 		HTTPResponse response = new HTTPResponse();
@@ -188,5 +203,19 @@ public class ConnectionTask implements Runnable {
 		writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		writer.write(response.toString());
 		writer.flush();
+	}
+
+	/**
+	 * Closes the I/O-streams used in the request.
+	 *
+	 * @throws IOException
+	 */
+	private void closeStreams() throws IOException {
+		if (reader != null) {
+			reader.close();
+		}
+		if (writer != null) {
+			writer.close();
+		}
 	}
 }
