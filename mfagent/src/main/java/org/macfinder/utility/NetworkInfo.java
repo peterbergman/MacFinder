@@ -43,19 +43,24 @@ public class NetworkInfo {
 	 * @return String the output from the network scan
 	 */
 	private static String getNetworkInfo() {
-		String line = "";
-		StringBuffer info = new StringBuffer();
+		String line;
+		StringBuilder info = new StringBuilder();
+		BufferedReader reader = null;
 		try {
 			Process process = Runtime.getRuntime().exec("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s");
 			process.waitFor();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			while ((line = reader.readLine())!= null) {
 				info.append(line + " ");
 			}
 		} catch (IOException ioe) {
-			// TODO: handle exception...
 		} catch (InterruptedException ie) {
-			// TODO: handle exception...
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException ioe) {}
 		}
 		return info.toString();
 	}

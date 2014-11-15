@@ -10,7 +10,7 @@ import javax.swing.*;
  */
 public class DialogueHelper {
 
-	private final static String DEFAULT_MESSAGE = " Enter your credentials. If you don't already have an account, a new one will be created.";
+	private static final String DEFAULT_MESSAGE = " Enter your credentials. If you don't already have an account, a new one will be created.";
 
 	public static User showUserInformationDialogue(String message) {
 		message = "<html>" + (message != null ? "<center>" + message + "</center><br>" : "") + DEFAULT_MESSAGE + "</html>";

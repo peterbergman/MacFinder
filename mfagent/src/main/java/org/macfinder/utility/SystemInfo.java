@@ -10,19 +10,24 @@ import java.io.InputStreamReader;
  */
 public class SystemInfo {
 	public static String getComputerName() {
-		String line = "";
-		StringBuffer name = new StringBuffer();
+		String line;
+		StringBuilder name = new StringBuilder();
+		BufferedReader reader = null;
 		try {
 			Process process = Runtime.getRuntime().exec("scutil --get ComputerName");
 			process.waitFor();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			while ((line = reader.readLine())!= null) {
 				name.append(line);
 			}
 		} catch (IOException ioe) {
-			// TODO: handle exception...
 		} catch (InterruptedException ie) {
-			// TODO: handle exception...
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException ioe) {}
 		}
 		return name.toString();
 	}

@@ -6,7 +6,6 @@ import org.macfinder.model.User;
 import org.macfinder.model.http.HTTPResponse;
 import org.macfinder.utility.*;
 
-import java.io.IOException;
 import java.util.Date;
 
 public class App {

@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 public class ServerConnection {
 
 	//private static final String SERVER_ADDRESS = "https://92hn1nhwh76y.runscope.net"; //Runscope
-	private final static String SERVER_ADDRESS = "http://192.168.1.74:8080/agent"; //Home
+	private static final String SERVER_ADDRESS = "http://192.168.1.74:8080/agent"; //Home
 	//private static final String SERVER_ADDRESS = "http://77.238.33.55:8080/agent"; //DSV
 
 	/**
@@ -26,7 +26,6 @@ public class ServerConnection {
 	 *
 	 * @param data			an AgentRequest object that contains all the necessary information
 	 *              		needed to communicate with the server
-	 * @throws IOException	if the internal HttpURLConnection fails for any reason
 	 */
 	public static HTTPResponse sendData(User data) {
 		Gson gson = new Gson();

@@ -1,8 +1,6 @@
 package org.macfinder.model.http;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -10,7 +8,7 @@ import java.util.*;
  */
 public class HTTPResponse {
 
-	private final static Map<Integer, String> HTTP_CODES = new HashMap<Integer, String>();
+	private static final Map<Integer, String> HTTP_CODES = new HashMap<Integer, String>();
 
 	static {
 		HTTP_CODES.put(200, "OK");
@@ -24,7 +22,7 @@ public class HTTPResponse {
 	private Map<String, String> headers;
 	private String body;
 
-	public HTTPResponse() throws IOException {
+	public HTTPResponse() {
 		headers = new HashMap<String, String>();
 		statusCode = 200;
 		version = "HTTP/1.0";
@@ -42,7 +40,7 @@ public class HTTPResponse {
 		return statusCode;
 	}
 
-	public void setBody(String body) throws IOException {
+	public void setBody(String body) {
 		this.body = body;
 		headers.put("Content-Length", this.body.getBytes().length + "");
 	}

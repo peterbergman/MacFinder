@@ -52,7 +52,7 @@ public class User implements Serializable {
 	 * If the machine is not present in the User's list of machines,
 	 * then the new machine is added to the list.
 	 *
-	 * @param machine
+	 * @param machine	the machine to be added
 	 */
 	public void addMachine(Machine machine) {
 		boolean foundMachine = false;

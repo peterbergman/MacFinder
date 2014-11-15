@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class FileHelper {
 
-	private final static String FILE_NAME = "/tmp/mf.dat"; // TODO: file should be saved somewhere else...
+	private static final String FILE_NAME = "/tmp/mf.dat"; // TODO: file should be saved somewhere else...
 
 	/**
 	 * Tries to read the file mf.dat located at /opt/macfinder and
