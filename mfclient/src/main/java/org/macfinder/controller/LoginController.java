@@ -52,8 +52,8 @@ public class LoginController implements Controller {
 	private class LoginButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			User user = new User(loginView.getUsername(), loginView.getPassword());
 			loginView.setInputEnabled(false);
+			User user = new User(loginView.getUsername(), loginView.getPassword());
 			(new ServerConnectionWorker(LoginController.this, user)).execute();
 		}
 	}

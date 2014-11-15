@@ -54,6 +54,7 @@ public class MainController implements Controller {
 
 	public void workerCallback(ImageIcon imageIcon) {
 		mainView.setMap(imageIcon);
+		mainView.setInputEnabled(true);
 	}
 
 	private class LookupButtonActionActionListener implements ActionListener {
@@ -63,6 +64,7 @@ public class MainController implements Controller {
 			selectedMachine.add(mainView.getSelectedMachine());
 			if (selectedMachine.size() != 0) {
 				user.getMachines().retainAll(selectedMachine);
+				mainView.setInputEnabled(false);
 				(new ServerConnectionWorker(MainController.this, user)).execute();
 			}
 		}

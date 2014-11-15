@@ -59,6 +59,11 @@ public class MainView extends JFrame {
 		lookupLocationButton.addActionListener(actionListener);
 	}
 
+	public void setInputEnabled(boolean enabled) {
+		machineList.setEnabled(enabled);
+		lookupLocationButton.setEnabled(enabled);
+	}
+
 	private void setUpMapComponent() {
 		mapComponent = new MapComponent();
 		add(mapComponent, BorderLayout.CENTER);
