@@ -51,6 +51,12 @@ public class LoginView extends JFrame {
 		return passwordField.getText();
 	}
 
+	public void setInputEnabled(boolean enabled) {
+		passwordField.setEnabled(enabled);
+		usernameField.setEnabled(enabled);
+		loginButton.setEnabled(enabled);
+	}
+
 	private void setUpContentPanel() {
 		contentPanel = new JPanel();
 

@@ -179,7 +179,7 @@ public class ConnectionTask implements Runnable {
 		if (existingUser == null) {
 			response.setStatusCode(401);
 		} else if (user.getMachines().size() > 0) {
-			LOGGER.info("Looking location for machine...");
+			LOGGER.info("Looking up location for machine...");
 			List<Ping> pings = user.getMachines().get(0).getPings();
 			List<AccessPoint> accessPoints = pings.get(pings.size()-1).getWifiAccessPoints();
 			if (pings.get(pings.size()-1).getGeoLookup() == null) {

@@ -38,6 +38,7 @@ public class LoginController implements Controller {
 			mainController.start();
 		} else {
 			JOptionPane.showMessageDialog(loginView, "Login failed!", "Error", JOptionPane.ERROR_MESSAGE);
+			loginView.setInputEnabled(true);
 		}
 	}
 
@@ -52,6 +53,7 @@ public class LoginController implements Controller {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			User user = new User(loginView.getUsername(), loginView.getPassword());
+			loginView.setInputEnabled(false);
 			(new ServerConnectionWorker(LoginController.this, user)).execute();
 		}
 	}
