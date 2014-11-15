@@ -20,7 +20,7 @@ public class ServerConnection {
 	//private static final String SERVER_ADDRESS = "http://77.238.33.55:8080/client"; //DSV
 
 	private final static Gson GSON = new Gson();
-	
+
 	/**
 	 * Sends data to the MacFinder server.
 	 *
