@@ -179,13 +179,19 @@ public class ConnectionTask implements Runnable {
 		if (existingUser == null) {
 			response.setStatusCode(401);
 		} else if (user.getMachines().size() > 0) {
+			LOGGER.info("Looking location for machine...");
 			List<Ping> pings = user.getMachines().get(0).getPings();
 			List<AccessPoint> accessPoints = pings.get(pings.size()-1).getWifiAccessPoints();
-			LocationServiceRequest lookupRequest = new LocationServiceRequest(accessPoints); // TODO: redundant class?
-			LocationService locationService = new LocationService(lookupRequest);
-			GeoLookup lookup = locationService.lookupLocation();
-			pings.get(pings.size()-1).setGeoLookup(lookup);
-			existingUser = dbService.update(user, existingUser);
+			if (pings.get(pings.size()-1).getGeoLookup() == null) {
+				LOGGER.info("Contacting Maps API for geo lookup...");
+				LocationServiceRequest lookupRequest = new LocationServiceRequest(accessPoints); // TODO: redundant class?
+				LocationService locationService = new LocationService(lookupRequest);
+				GeoLookup lookup = locationService.lookupLocation();
+				pings.get(pings.size()-1).setGeoLookup(lookup);
+				existingUser = dbService.update(user, existingUser);
+			} else {
+				LOGGER.info("Cached geo lookup found!");
+			}
 		}
 
 		response.setBody(URLEncoder.encode(GSON.toJson(existingUser), "utf-8"));
