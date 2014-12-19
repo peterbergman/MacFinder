@@ -11,11 +11,17 @@
             <string>/opt/macfinder/mfagent.jar</string>
             <string>org.macfinder.App</string>
         </array>
-        <key>UserName</key>
-        <string>root</string>
         <key>RunAtLoad</key>
         <true/>
+	<key>UserName</key>
+	<string>root</string>
         <key>StartInterval</key>
-        <integer>3600</integer>
+        <integer>7200</integer>
+	<key>StandardOutPath</key>
+	<string>/var/log/macfinder.log</string>
+	<key>StandardErrorPath</key>
+	<string>/var/log/macfinder_err.log</string>
+	<key>ProcessType</key>
+	<string>Interactive</string>
     </dict>
 </plist>
