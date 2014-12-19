@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
+java -cp /opt/macfinder/mfagent.jar org.macfinder.Authenticate
 launchctl unload -w /Library/LaunchDaemons/org.macfinder.agent.plist || true
 launchctl load -w /Library/LaunchDaemons/org.macfinder.agent.plist
-
