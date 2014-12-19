@@ -11,24 +11,15 @@ import java.util.Date;
 public class App {
 
     public static void main(String[] args) {
+		System.setProperty("java.awt.headless", "false");
+		System.out.println("Starting agent...");
 		User user = FileHelper.readUserInformation();
-		if (user == null) {
-			user = DialogueHelper.showUserInformationDialogue(null);
-			boolean authenticated = false;
-			while (!authenticated) {
-				HTTPResponse response = ServerConnection.sendData(user);
-				if (response != null && response.getStatusCode() == 401) {
-					user = DialogueHelper.showUserInformationDialogue("Incorrect password for existing user.");
-				} else {
-					authenticated = true;
-				}
-			}
-			FileHelper.saveUserInformation(user);
+		if (user != null) {
+			Machine machine = new Machine(SystemInfo.getComputerName());
+			Ping ping = new Ping(new Date(System.currentTimeMillis()), NetworkInfo.getNetworks());
+			machine.addPing(ping);
+			user.addMachine(machine);
+			ServerConnection.sendData(user);
 		}
-		Machine machine = new Machine(SystemInfo.getComputerName());
-		Ping ping = new Ping(new Date(System.currentTimeMillis()), NetworkInfo.getNetworks());
-		machine.addPing(ping);
-		user.addMachine(machine);
-		ServerConnection.sendData(user);
     }
 }
