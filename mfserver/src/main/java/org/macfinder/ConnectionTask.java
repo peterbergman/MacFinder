@@ -149,13 +149,16 @@ public class ConnectionTask implements Runnable {
 		User updatedUser = GSON.fromJson(request.getBody(), User.class);
 		User existingUser = dbService.get(updatedUser);
 		HTTPResponse response = new HTTPResponse();
-		if (existingUser != null) {
+		if (existingUser != null && existingUser.getPassword().equals(updatedUser.getPassword())) {
 			response.setBody(request.getBody());
 			if (updatedUser.getMachines().size() > 0) {
 				dbService.update(updatedUser, existingUser);
 			}
-		} else {
+		} else if (existingUser != null && !existingUser.getPassword().equals(updatedUser.getPassword())) {
+			LOGGER.warning("Authentication failed for user: " + existingUser.getUsername());
 			response.setStatusCode(401);
+		} else {
+			dbService.create(updatedUser);
 		}
 		dbService.close();
 		sendResponse(response);
@@ -176,7 +179,8 @@ public class ConnectionTask implements Runnable {
 		DBService dbService = new DBService();
 		User existingUser = dbService.get(user);
 
-		if (existingUser == null) {
+		if (existingUser != null && !existingUser.getPassword().equals(user.getPassword())) {
+			LOGGER.warning("Authentication failed for user: " + existingUser.getUsername());
 			response.setStatusCode(401);
 		} else if (user.getMachines().size() > 0) {
 			LOGGER.info("Looking up location for machine...");
