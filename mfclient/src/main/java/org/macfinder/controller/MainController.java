@@ -46,8 +46,18 @@ public class MainController implements Controller {
 	}
 
 	public void workerCallback(HTTPResponse response) {
-		user = GSON.fromJson(response.getBody(), User.class);
+		User fetchedUser = GSON.fromJson(response.getBody(), User.class);
+		Machine selectedMachine = mainView.getSelectedMachine();
 		List<Ping> pings = mainView.getSelectedMachine().getPings();
+		for (Machine fetchedMachine : fetchedUser.getMachines()) {
+			if (fetchedMachine.equals(selectedMachine)) {
+				for (Ping fetchedPing : fetchedMachine.getPings()) {
+					if (fetchedPing.equals(pings.get(pings.size() - 1))) {
+						pings.get(pings.size() - 1).setGeoLookup(fetchedPing.getGeoLookup());
+					}
+				}
+			}
+		}
 		(new MapServerConnectionWorker(this, pings.get(pings.size()-1).getGeoLookup())).execute();
 	}
 
