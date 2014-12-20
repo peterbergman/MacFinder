@@ -44,6 +44,19 @@ public class DBService {
 	}
 
 	/**
+	 * Creates a new user.
+	 *
+	 * @param newUser
+	 * @return the new user
+	 */
+	public User create(User newUser) {
+		BasicDBObject document = (BasicDBObject) (JSON.parse(new Gson().toJson(newUser)));
+		collection.insert(document);
+		LOGGER.info("New user created: " + newUser.getUsername());
+		return newUser;
+	}
+
+	/**
 	 * Updates a user in the database.
 	 *
 	 * The machines from the updatedUserData is added to the list of machines
@@ -77,11 +90,8 @@ public class DBService {
 	 */
 	public User get(User user) {
 		LOGGER.info("Looking for user: " + user.getUsername() + " ...");
-		BasicDBObject query = new BasicDBObject("username", user.getUsername()).append("password", user.getPassword());
+		BasicDBObject query = new BasicDBObject("username", user.getUsername());
 		DBObject foundUser = collection.findOne(query);
-		if (foundUser == null) {
-			LOGGER.warning("Authentication failed for user: " + user.getUsername());
-		}
 		return GSON.fromJson(GSON.toJson(foundUser), User.class);
 	}
 
