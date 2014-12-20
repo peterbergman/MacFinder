@@ -48,7 +48,11 @@ public class MainView extends JFrame {
 	}
 
 	public void setMachines(List<Machine> machines) {
-		machineList.setListData(machines.toArray(new Machine[machines.size()]));
+		DefaultListModel<Machine> model = new DefaultListModel<Machine>();
+		for (Machine machine : machines) {
+			model.addElement(machine);
+		}
+		machineList.setModel(model);
 	}
 
 	public Machine getSelectedMachine() {
