@@ -12,7 +12,6 @@ public class App {
 
     public static void main(String[] args) {
 		System.setProperty("java.awt.headless", "false");
-		System.out.println("Starting agent...");
 		User user = FileHelper.readUserInformation();
 		if (user != null) {
 			Machine machine = new Machine(SystemInfo.getComputerName());
