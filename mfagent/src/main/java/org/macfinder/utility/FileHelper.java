@@ -9,8 +9,6 @@ import java.io.*;
  */
 public class FileHelper {
 
-	private static final String FILE_NAME = "/tmp/mf.dat"; // TODO: file should be saved somewhere else...
-
 	/**
 	 * Tries to read the file mf.dat located at /opt/macfinder and
 	 * parse the contents to a User object.
@@ -22,11 +20,12 @@ public class FileHelper {
 		ObjectInputStream objectInputStream = null;
 		User user = null;
 		try {
-			fileInputStream = new FileInputStream(FILE_NAME);
+			System.out.println("Looking for " + System.getProperty("user.home") + "/Library/MacFinder/mf.dat");
+			fileInputStream = new FileInputStream(System.getProperty("user.home") + "/Library/MacFinder/mf.dat");
 			objectInputStream = new ObjectInputStream(fileInputStream);
 			user = (User) objectInputStream.readObject();
 		} catch (IOException ioe) {
-
+			System.out.println("Got error: " + ioe);
 		} catch (ClassNotFoundException cfe) {
 
 		} finally {
@@ -48,7 +47,11 @@ public class FileHelper {
 		FileOutputStream fileOutputStream = null;
 		ObjectOutputStream objectOutputStream = null;
 		try {
-			fileOutputStream = new FileOutputStream(FILE_NAME);
+			File directory = new File(System.getProperty("user.home") + "/Library/MacFinder");
+			if (!directory.exists()) {
+				directory.mkdir();
+			}
+			fileOutputStream = new FileOutputStream(System.getProperty("user.home") + "/Library/MacFinder/mf.dat");
 			objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(user);
 		} catch (IOException ioe) {
