@@ -22,6 +22,14 @@ import java.util.logging.Logger;
 public class ConnectionTask implements Runnable {
 
 	private final static Logger LOGGER = Logger.getLogger(ConnectionTask.class.getName());
+	/*
+			try {
+			LOGGER.setUseParentHandlers(false);
+			FileHandler handler = new FileHandler("/tmp/mfserver.log");
+			handler.setFormatter(new SimpleFormatter());
+			LOGGER.addHandler(handler);
+		} catch (IOException ioe) {}
+	 */
 	static {
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.addHandler(new ConsoleHandler());
@@ -79,7 +87,7 @@ public class ConnectionTask implements Runnable {
 				handleClientRequest(request);
 			}
 		} else {
-			LOGGER.info("Invalid request received and discarded!");
+			handleInvalidRequest();
 		}
 	}
 
@@ -172,15 +180,15 @@ public class ConnectionTask implements Runnable {
 	 *              			a User object.
 	 * @throws IOException
 	 */
-	private void handleClientRequest(HTTPRequest request) throws IOException{
+	private void handleClientRequest(HTTPRequest request) throws IOException {
 		LOGGER.info("Handling client request...");
 		HTTPResponse response = new HTTPResponse();
 		User user = GSON.fromJson(request.getBody(), User.class);
 		DBService dbService = new DBService();
 		User existingUser = dbService.get(user);
 
-		if (existingUser != null && !existingUser.getPassword().equals(user.getPassword())) {
-			LOGGER.warning("Authentication failed for user: " + existingUser.getUsername());
+		if (existingUser == null || !existingUser.getPassword().equals(user.getPassword())) {
+			LOGGER.warning("Authentication failed for user: " + user.getUsername());
 			response.setStatusCode(401);
 		} else if (user.getMachines().size() > 0) {
 			LOGGER.info("Looking up location for machine...");
@@ -200,6 +208,19 @@ public class ConnectionTask implements Runnable {
 
 		response.setBody(URLEncoder.encode(GSON.toJson(existingUser), "utf-8"));
 		dbService.close();
+		sendResponse(response);
+	}
+
+	/**
+	 * Helper method to handle invalid requests.
+	 *
+	 * @throws IOException
+	 */
+	private void handleInvalidRequest() throws IOException {
+		LOGGER.info("Invalid request received and discarded!");
+		HTTPResponse response = new HTTPResponse();
+		response.setStatusCode(501);
+		response.setBody("");
 		sendResponse(response);
 	}
 
