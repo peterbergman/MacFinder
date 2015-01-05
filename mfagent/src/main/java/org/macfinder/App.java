@@ -11,7 +11,7 @@ import java.util.Date;
 public class App {
 
     public static void main(String[] args) {
-		System.setProperty("java.awt.headless", "false");
+		System.out.println(new Date() + " Starting agent.");
 		User user = FileHelper.readUserInformation();
 		if (user != null) {
 			Machine machine = new Machine(SystemInfo.getComputerName());
