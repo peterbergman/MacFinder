@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 public class LoginController implements Controller {
 
 	private final static Gson GSON = new Gson();
-
 	private LoginView loginView;
 
 	public LoginController() {
@@ -23,10 +22,22 @@ public class LoginController implements Controller {
 		loginView.addLoginButtonActionListener(new LoginButtonActionListener());
 	}
 
+	/**
+	 * Starts the controller and opens the main view window.
+	 */
 	public void start() {
 		loginView.open();
 	}
 
+	/**
+	 * Callback function for the ServerConnectionWorker.
+	 *<p></p>
+	 * Reacts to the authentication result. Closes down the login view and shows the main view
+	 * if the login was successful. Otherwise shows a message about the failed login and lets
+	 * the user enter the credentials again.
+	 *
+	 * @param response	the response received from the server.
+	 */
 	public void workerCallback(HTTPResponse response) {
 		if (response.getStatusCode() == 200) {
 			loginView.close();
