@@ -34,7 +34,7 @@ public class MainController implements Controller {
 
 	public void start() {
 		mainView.open();
-		String url = "http://maps.googleapis.com/maps/api/staticmap?"
+		/*String url = "http://maps.googleapis.com/maps/api/staticmap?"
 				+ "center=59.4030598,17.9813378"
 				+ "&zoom=10"
 				+ "&size=640x640"
@@ -42,9 +42,18 @@ public class MainController implements Controller {
 				+ "&sensor=false";
 		try {
 			mainView.setMap(new ImageIcon(new URL(url)));
-		} catch (MalformedURLException mfe) {};
+		} catch (MalformedURLException mfe) {};*/
 	}
 
+	/**
+	 * Callback function for the ServerConnectionWorker.
+	 *<p></p>
+	 * Receives the response from the server and adds the geo lookup result to
+	 * the correct ping for the correct machine. Then starts an instance of the
+	 * MapServiceConnectionWorker to load the map image that contains the geo lookup.
+	 *
+	 * @param response	the response received from the server.
+	 */
 	public void workerCallback(HTTPResponse response) {
 		User fetchedUser = GSON.fromJson(response.getBody(), User.class);
 		Machine selectedMachine = mainView.getSelectedMachine();
@@ -61,11 +70,21 @@ public class MainController implements Controller {
 		(new MapServerConnectionWorker(this, pings.get(pings.size()-1).getGeoLookup())).execute();
 	}
 
+	/**
+	 * Callback function for the MapServiceConnectionWorker.
+	 *<p></p>
+	 * Receives an image and sends it to the main view.
+	 *
+	 * @param imageIcon	the map image received from the server.
+	 */
 	public void workerCallback(ImageIcon imageIcon) {
 		mainView.setMap(imageIcon);
 		mainView.setInputEnabled(true);
 	}
 
+	/**
+	 * Class to handle clicks on the lookup button.
+	 */
 	private class LookupButtonActionActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -79,3 +98,4 @@ public class MainController implements Controller {
 		}
 	}
 }
+
