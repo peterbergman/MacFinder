@@ -15,6 +15,7 @@ public class HTTPResponse {
 		HTTP_CODES.put(201, "Created");
 		HTTP_CODES.put(401, "Unauthorized");
 		HTTP_CODES.put(500, "Internal Server Error");
+		HTTP_CODES.put(501, "Not Implemented");
 	}
 
 	private int statusCode;

@@ -17,6 +17,7 @@ public class HTTPResponse {
 		HTTP_CODES.put(201, "Created");
 		HTTP_CODES.put(401, "Unauthorized");
 		HTTP_CODES.put(500, "Internal Server Error");
+		HTTP_CODES.put(501, "Not Implemented");
 	}
 
 	private int statusCode;
@@ -24,7 +25,7 @@ public class HTTPResponse {
 	private Map<String, String> headers;
 	private String body;
 
-	public HTTPResponse() throws IOException {
+	public HTTPResponse() {
 		headers = new HashMap<String, String>();
 		statusCode = 200;
 		version = "HTTP/1.0";
@@ -38,7 +39,7 @@ public class HTTPResponse {
 		this.statusCode = statusCode;
 	}
 
-	public void setBody(String body) throws IOException {
+	public void setBody(String body) {
 		this.body = body;
 		headers.put("Content-Length", this.body.getBytes().length + "");
 	}
