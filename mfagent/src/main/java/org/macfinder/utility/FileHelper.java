@@ -20,14 +20,11 @@ public class FileHelper {
 		ObjectInputStream objectInputStream = null;
 		User user = null;
 		try {
-			System.out.println("Looking for " + System.getProperty("user.home") + "/Library/MacFinder/mf.dat");
 			fileInputStream = new FileInputStream(System.getProperty("user.home") + "/Library/MacFinder/mf.dat");
 			objectInputStream = new ObjectInputStream(fileInputStream);
 			user = (User) objectInputStream.readObject();
 		} catch (IOException ioe) {
-			System.out.println("Got error: " + ioe);
 		} catch (ClassNotFoundException cfe) {
-
 		} finally {
 			try {
 				if (fileInputStream != null) {
