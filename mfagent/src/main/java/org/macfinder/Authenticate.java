@@ -6,6 +6,9 @@ import org.macfinder.utility.DialogueHelper;
 import org.macfinder.utility.FileHelper;
 import org.macfinder.utility.ServerConnection;
 
+/**
+ * Class to handle the initial authentication when installing the agent.
+ */
 public class Authenticate {
 	public static void main(String[] args) {
 		User user = DialogueHelper.showUserInformationDialogue(null);
