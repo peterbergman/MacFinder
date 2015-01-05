@@ -15,9 +15,7 @@ import java.net.URLEncoder;
  */
 public class ServerConnection {
 
-	//private static final String SERVER_ADDRESS = "https://92hn1nhwh76y.runscope.net"; //Runscope
-	private final static String SERVER_ADDRESS = "http://192.168.1.74:8080/client"; //Home
-	//private static final String SERVER_ADDRESS = "http://77.238.33.55:8080/client"; //DSV
+	private final static String SERVER_ADDRESS  = "http://ec2-54-172-75-176.compute-1.amazonaws.com:8080/client";
 
 	private final static Gson GSON = new Gson();
 
