@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  */
 public class ServerConnection {
 
-	private final static String SERVER_ADDRESS  = "http://ec2-54-172-75-176.compute-1.amazonaws.com:8080/client";
+	private final static String SERVER_ADDRESS  = "http://ec2-54-172-75-176.compute-1.amazonaws.com:8080/agent";
 
 	/**
 	 * Sends data to the MacFinder server.
